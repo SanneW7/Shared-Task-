@@ -5,6 +5,10 @@ from nltk.tokenize import RegexpTokenizer
 import emoji
 
 
+def divider():
+    """Print a divider for output readability"""
+    print('-'*50)
+
 def pprint_label_distribution(label_distribution):
     """Pretty-prints a label distribution"""
     tot_entries = label_distribution.sum()
@@ -13,7 +17,7 @@ def pprint_label_distribution(label_distribution):
         count = label_info[1]
         pct = '{:.2%}'.format(count / tot_entries)
         print('\"{0}\": {1} ({2})'.format(label, count, pct))
-    print("\n")
+    print()
 
 
 def get_label_distribution(df, column):
@@ -27,7 +31,7 @@ def get_avg_length(df, column):
     texts = df[column].to_list()
     text_lengths = [len(tokenizer.tokenize(text)) for text in texts]
     avg_length = stat.mean(text_lengths)
-    return avg_length
+    return round(avg_length, 2)
 
 
 def contains_emoji(s):
@@ -51,6 +55,8 @@ def main():
     # Load training data
     train_path = "starting_kit/train_all_tasks.csv"
     train_df = pd.read_csv(train_path)
+    train_df_sexist = train_df[train_df['label_sexist'] == 'sexist'].reset_index(drop=True)
+    train_df_not_sexist = train_df[train_df['label_sexist'] == 'not sexist'].reset_index(drop=True)
 
     # Get label distribution of the column 'label_sexist' in training data
     label_dist_ls = get_label_distribution(train_df, 'label_sexist')
@@ -67,14 +73,32 @@ def main():
     print("* Label distribution 'label_vector' (Task C) *")
     pprint_label_distribution(label_dist_lv)
 
+    divider()
+
     # Get distribution of sentences containing emojis
     dist_e = sents_containing_emoji(train_df, 'text')
-    print("* Distribution of sentences containing emojis *")
+    print("* Distribution of sentences containing emojis - All *")
     pprint_label_distribution(dist_e)
 
+    dist_e_sexist = sents_containing_emoji(train_df_sexist, 'text')
+    print("* Distribution of sentences containing emojis - Sexist *")
+    pprint_label_distribution(dist_e_sexist)
+
+    dist_e_not_sexist = sents_containing_emoji(train_df_not_sexist, 'text')
+    print("* Distribution of sentences containing emojis - Not sexist *")
+    pprint_label_distribution(dist_e_not_sexist)
+
+    divider()
+
     # Average length of texts in training data in words
-    length_w_a = get_avg_length(train_df, 'text')
-    print("Average text length (in words):", length_w_a, "\n")
+    length_w_ls = get_avg_length(train_df, 'text')
+    print("Average text length (in words) - All:", length_w_ls)
+
+    length_w_ls_sexist = get_avg_length(train_df_sexist, 'text')
+    print("Average text length (in words) - Sexist:", length_w_ls_sexist)
+
+    length_w_ls_not_sexist = get_avg_length(train_df_not_sexist, 'text')
+    print("Average text length (in words) - Not sexist:", length_w_ls_not_sexist, "\n")
 
 
 if __name__ == "__main__":
