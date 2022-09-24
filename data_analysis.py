@@ -22,6 +22,7 @@ def get_label_distribution(df, column):
 
 
 def get_avg_length(df, column):
+    """Get average length of a texts in words"""
     tokenizer = RegexpTokenizer(r'\w+')
     texts = df[column].to_list()
     text_lengths = [len(tokenizer.tokenize(text)) for text in texts]
