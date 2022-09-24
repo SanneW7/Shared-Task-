@@ -7,7 +7,8 @@ import emoji
 
 def divider():
     """Print a divider for output readability"""
-    print('-'*50)
+    print('-' * 50)
+
 
 def pprint_label_distribution(label_distribution):
     """Pretty-prints a label distribution"""
@@ -51,6 +52,22 @@ def sents_containing_emoji(df, column):
     return dist
 
 
+def contains_hashtag(text):
+    """Checks if there is a hashtag in a text"""
+    word_list = text.split(' ')
+    for word in word_list:
+        if word[0] == '#':
+            return True
+    return False
+
+
+def sents_containing_hashtag(df, column):
+    """Return a Series containing the distribution of hashtag-presence in texts"""
+    df['contains_hashtag'] = df[column].apply(lambda text: contains_hashtag(text))
+    dist = df['contains_hashtag'].value_counts()
+    return dist
+
+
 def main():
     # Load training data
     train_path = "starting_kit/train_all_tasks.csv"
@@ -87,6 +104,21 @@ def main():
     dist_e_not_sexist = sents_containing_emoji(train_df_not_sexist, 'text')
     print("* Distribution of sentences containing emojis - Not sexist *")
     pprint_label_distribution(dist_e_not_sexist)
+
+    divider()
+
+    # Get distribution of sentences containing hashtags
+    dist_ht = sents_containing_hashtag(train_df, 'text')
+    print("* Distribution of sentences containing hashtags - All *")
+    pprint_label_distribution(dist_ht)
+
+    dist_ht_sexist = sents_containing_hashtag(train_df_sexist, 'text')
+    print("* Distribution of sentences containing hashtags - Sexist *")
+    pprint_label_distribution(dist_ht_sexist)
+
+    dist_ht_not_sexist = sents_containing_hashtag(train_df_not_sexist, 'text')
+    print("* Distribution of sentences containing hashtags - Not sexist *")
+    pprint_label_distribution(dist_ht_not_sexist)
 
     divider()
 
