@@ -1,7 +1,7 @@
 import pandas as pd
 import statistics as stat
 from nltk.tokenize import RegexpTokenizer
-#pip install emoji
+# pip install emoji
 import emoji
 
 
@@ -30,19 +30,19 @@ def get_avg_length(df, column):
 
 
 def contains_emoji(s):
-    # tering langzaam maar werkt ouleh
+    """Checks if there is an emoji in a text"""
     count = 0
     for e in emoji.EMOJI_DATA:
         count += s.count(e)
         if count > 1:
             return False
     return bool(count)
-    
+
 
 def sents_containing_emoji(df, column):
+    """Return a Series containing the distribution of emoji-presence in texts"""
     df['contains_emoji'] = df[column].apply(lambda e: contains_emoji(e))
     dist = df['contains_emoji'].value_counts()
-    
     return dist
 
 
@@ -52,30 +52,28 @@ def main():
     train_df = pd.read_csv(train_path)
 
     # Get label distribution of the column 'label_sexist' in training data
-    label_dist_a = get_label_distribution(train_df, 'label_sexist')
-    print("label distribution sexist/not sexist")
-    pprint_label_distribution(label_dist_a)
+    label_dist_ls = get_label_distribution(train_df, 'label_sexist')
+    print("* Label distribution 'label_sexist' (Task A) *")
+    pprint_label_distribution(label_dist_ls)
+
+    # Get label distribution of the column 'label_category' in training data
+    label_dist_lc = get_label_distribution(train_df, 'label_category')
+    print("* Label distribution 'label_category' (Task B) *")
+    pprint_label_distribution(label_dist_lc)
+
+    # Get label distribution of the column 'label_vector' in training data
+    label_dist_lv = get_label_distribution(train_df, 'label_vector')
+    print("* Label distribution 'label_vector' (Task C) *")
+    pprint_label_distribution(label_dist_lv)
+
+    # Get distribution of sentences containing emojis
+    dist_e = sents_containing_emoji(train_df, 'text')
+    print("* Distribution of sentences containing emojis *")
+    pprint_label_distribution(dist_e)
 
     # Average length of texts in training data in words
     length_w_a = get_avg_length(train_df, 'text')
-    print("average word length:", length_w_a, "\n")
-
-    # label distribution of label_category
-    dist = get_label_distribution(train_df, 'label_category')
-    print("label distribution label categories")
-    pprint_label_distribution(dist)
-
-    # label distribution of label_vector
-    dist_v = get_label_distribution(train_df, 'label_vector')
-    print("label distruibution label_vector")
-    pprint_label_distribution(dist_v)
-
-    #get sents containing emojis
-    dist_e = sents_containing_emoji(train_df, 'text')
-    print("sentences containing emojis")
-    pprint_label_distribution(dist_e)
-
-    
+    print("Average text length (in words):", length_w_a, "\n")
 
 
 if __name__ == "__main__":
