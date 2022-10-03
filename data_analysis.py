@@ -23,7 +23,7 @@ def pprint_label_distribution(label_distribution):
 
 def get_label_distribution(df, column):
     """Return a Series containing counts of a label in a DataFrame column"""
-    return df[column].value_counts()
+    return df[df[column] != 'none'][column].reset_index(drop=True).value_counts()
 
 
 def get_avg_length(df, column):
