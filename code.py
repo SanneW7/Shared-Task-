@@ -14,7 +14,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn import svm
 from nltk.tokenize import word_tokenize
 from nltk.stem.snowball import SnowballStemmer
-from sklearn.model_selection import StratifiedShuffleSplit
+from sklearn.model_selection import StratifiedShuffleSplit, train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.pipeline import Pipeline, FeatureUnion
@@ -31,7 +31,6 @@ nltk.download('punkt')
 nltk.download('wordnet')
 nltk.download('omw-1.4')
 
-np.random.seed(1)
 
 
 def create_arg_parser():
@@ -42,6 +41,8 @@ def create_arg_parser():
                         help="A or B")
     parser.add_argument("--vectorizer", type=str, default="tfidf",
                         help="Type of vectorizer: tfidf or tf (just term frequency)")
+    parser.add_argument("--seed", type=int, default=120,
+                        help="Seed for random state for experiments")
     args = parser.parse_args()
     return args
 
@@ -73,8 +74,17 @@ def preprocess(df):
   #   return " ".join([stemmer.stem(w) for w in word_tokenize(text)])
   return df
 
+def filter_none_class(reviews, labels):
+  new_list_text = []
+  new_list_label = []
+  for review, lbl in zip(reviews, labels):
+    if lbl != "none":
+      new_list_text.append(review)
+      new_list_label.append(lbl)
+  
+  return new_list_text, new_list_label
 
-def split_data(df):
+def split_data(df, seed):
   """Create train, dev, test sets with representative proportions
 
   9800 training examples
@@ -96,38 +106,12 @@ def split_data(df):
   else:
     assert 1!=1, "Wrong task type chosen. Enter A/B only"
 
-  # Make an initial split into 70 (train):30 (test+dev) ratio
-  sss = StratifiedShuffleSplit(n_splits=2, test_size=0.3, random_state=1)
-
-  split_gen = sss.split(X, y)
-  train_index, test_index = next(split_gen)
-
-  X_train = X[train_index]
-  y_train = y[train_index]
+  X, y = filter_none_class(X, y)
+  X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=seed)
 
   # Split test set again for dev/test split
-  X_test = X[test_index]
-  y_test = y[test_index]
+  X_test, X_dev, y_test, y_dev = train_test_split(X_test, y_test, test_size=0.5, random_state=seed)
 
-  # Make a second split where 30 percent data is further split into 15 (dev) and 15 (test)
-  sss2 = StratifiedShuffleSplit(n_splits=2, test_size=0.5, random_state=1)
-
-  dev_test = sss2.split(X_test, y_test)
-  dev_index, test_index = next(dev_test)
-
-  X_dev = X[dev_index]
-  y_dev = y[dev_index]
-
-  X_test = X[test_index]
-  y_test = y[test_index]
-
-  X_train.to_csv("X_train.csv")
-  X_dev.to_csv("X_dev.csv")
-  X_test.to_csv("X_test.csv")
-
-  y_train.to_csv("y_train.csv")
-  y_dev.to_csv("y_dev.csv")
-  y_test.to_csv("y_test.csv")
 
   return X_train, X_dev, X_test, y_train, y_dev, y_test
 
@@ -200,10 +184,12 @@ def calc_majority(y_train, y_test):
 
 if __name__ == '__main__':
   args = create_arg_parser()
+  np.random.seed(args.seed)
+
   print(args)
   df = pd.read_csv(args.input_file)
   df = preprocess(df)
-  X_train, X_dev, X_test, y_train, y_dev, y_test = split_data(df)
+  X_train, X_dev, X_test, y_train, y_dev, y_test = split_data(df, args.seed)
   vectorizer = get_vectorizer(args)
   classifier = fit_model(vectorizer, X_train, y_train, X_dev, y_dev)
   calc_majority(y_train, y_test)
