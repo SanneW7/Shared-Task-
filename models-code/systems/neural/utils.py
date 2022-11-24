@@ -44,6 +44,9 @@ def read_corpus(filename = "data/train.tsv", delimiter = ",", task_type = "A"):
     # removal of @USER token
     df['preprocessed_text'] = df['preprocessed_text'].str.replace(r'(@USER\s*){4,}','@USER @USER @USER ', regex=True)
 
+    # replace numbers by [NUM] token
+    df["preprocessed_text"] = df["preprocessed_text"].str.replace(r"([0-9]+[.,]*[0-9]+)", "[NUM]", regex=True)
+    
     # Emoji to natural language
     df['preprocessed_text'] = df['preprocessed_text'].apply(emoji.demojize)
     df['preprocessed_text'] = df['preprocessed_text'].str.replace(r':(\w+):', r'\g<1>', regex=True)

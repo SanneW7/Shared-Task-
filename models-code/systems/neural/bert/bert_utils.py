@@ -6,6 +6,7 @@ from utils import read_corpus, filter_none_class
 
 def load_model(lm = "bert-base-uncased", num_labels=2):
     tokenizer = AutoTokenizer.from_pretrained(lm)
+    tokenizer.add_tokens("[NUM]")
     model = TFAutoModelForSequenceClassification.from_pretrained(lm, num_labels= num_labels)
     return model, tokenizer
 
