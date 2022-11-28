@@ -8,6 +8,7 @@ def load_model(lm = "bert-base-uncased", num_labels=2):
     tokenizer = AutoTokenizer.from_pretrained(lm)
     tokenizer.add_tokens("[NUM]")
     model = TFAutoModelForSequenceClassification.from_pretrained(lm, num_labels= num_labels)
+    model.resize_token_embeddings(len(tokenizer))
     return model, tokenizer
 
 def vectorize_inputtext(max_seq_len, tokenizer, listoftexts):
