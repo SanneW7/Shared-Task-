@@ -1,4 +1,5 @@
 from googleapiclient import discovery
+import numpy as np
 import csv
 
 
@@ -20,11 +21,12 @@ def get_response_papi(client, att_list, sent):
     return response
 
 
-def pprint_response(response):
+def extract_probs(response):
+    response_array = np.array([])
     for att in sorted(response['attributeScores'].items()):
-        att_name = att[0]
-        att_prob = att[1]['spanScores'][0]['score']['value']
-        print('{0:<20}\t{1}'.format(att_name, att_prob))
+        prob = att[1]['spanScores'][0]['score']['value']
+        response_array = np.append(response_array, prob)
+    return response_array
 
 
 def main():
@@ -42,14 +44,13 @@ def main():
                 'TOXICITY']
 
     train_file = '../data/train.csv'
+
     with open(train_file, mode='r') as train:
         train_data = csv.DictReader(train)
         for row in train_data:
-            print(row['text'])
-            print(row['label_sexist'])
             response = get_response_papi(client, att_list, row['text'])
-            pprint_response(response)
-            print()
+            probs = extract_probs(response)
+            print(probs)
 
 
 if __name__ == "__main__":
