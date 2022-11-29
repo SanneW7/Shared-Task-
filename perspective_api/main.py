@@ -1,9 +1,11 @@
 from googleapiclient import discovery
-import numpy as np
 import csv
+import json
+import time
 
 
 def create_papi_client(api_key):
+    """Build the PerspectiveAPI client using an API key"""
     return discovery.build("commentanalyzer",
                            "v1alpha1",
                            developerKey=api_key,
@@ -13,6 +15,7 @@ def create_papi_client(api_key):
 
 
 def get_response_papi(client, att_list, sent):
+    """Get the attribute probabilities of a sentence"""
     att_dict = dict.fromkeys(att_list)
     analyze_request = {'comment': {'text': sent},
                        'requestedAttributes': att_dict,
@@ -22,17 +25,20 @@ def get_response_papi(client, att_list, sent):
 
 
 def extract_probs(response):
-    response_array = np.array([])
+    """Extract attribute probabilites from response"""
+    response_array = []
     for att in sorted(response['attributeScores'].items()):
         prob = att[1]['spanScores'][0]['score']['value']
-        response_array = np.append(response_array, prob)
+        response_array.append(prob)
     return response_array
 
 
 def main():
+    # Create PerspectiveAPI client
     api_key = 'AIzaSyBxjpGxPUtN30WrjCYCC6pOPDZ4fhZpPRo'
     client = create_papi_client(api_key)
 
+    # List of used attributes
     att_list = ['FLIRTATION',
                 'IDENTITY_ATTACK',
                 'INSULT',
@@ -43,14 +49,25 @@ def main():
                 'THREAT',
                 'TOXICITY']
 
+    # Files to extract data from and store data in
     train_file = '../data/train.csv'
+    output_file = '../data/train_papi.json'
 
+    # Get attribute probabilities of all training data
+    papi_dict = dict()
     with open(train_file, mode='r') as train:
         train_data = csv.DictReader(train)
         for row in train_data:
             response = get_response_papi(client, att_list, row['text'])
             probs = extract_probs(response)
-            print(probs)
+            papi_dict[row['rewire_id']] = probs
+
+            print('Retrieved and saved response of: {0}'.format(row['rewire_id']))
+            time.sleep(1.1)
+
+    # Save attribute probabilities to a JSON file
+    with open(output_file, "w") as outfile:
+        json.dump(papi_dict, outfile, indent=4)
 
 
 if __name__ == "__main__":
