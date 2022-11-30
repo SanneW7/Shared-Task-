@@ -107,7 +107,6 @@ class LitModel(pl.LightningModule):
         super().__init__()
         self.bert = AutoModel.from_pretrained(modelname)
         self.linear = nn.Linear(768 + extra_feature_len, num_labels)
-        print("Lit MODEL is", extra_feature_len,num_labels)
         self.learning_rate = learning_rate
         self.class_weights = class_weights
         self.loss_fn =  nn.CrossEntropyLoss(weight = torch.tensor(self.class_weights, dtype=torch.float))
@@ -122,7 +121,6 @@ class LitModel(pl.LightningModule):
         out = self.bert( **data, return_dict=True)
         pooled_output = out.pooler_output
         dropout_output = nn.functional.dropout(pooled_output)
-        # logits = self.linear(dropout_output)
         logits = self.linear(torch.cat((dropout_output, features), 1))
         return logits
 
