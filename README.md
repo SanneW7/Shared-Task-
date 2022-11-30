@@ -22,3 +22,8 @@ python code.py --input_file  ./starting_kit/train_all_tasks.csv --task_type A --
 python code.py --input_file  ./starting_kit/train_all_tasks.csv --task_type B --vectorizer tfidf
 
 ```
+
+## Data
+
+### Hurtlex
+The order of the used categories is as follows: "ps", "pa", "ddf", "ddp", "asf", "pr", "om", "qas", "cds", "asm"
