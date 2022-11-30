@@ -3,12 +3,13 @@ from torch.utils.data import Dataset
 
 class BertDataset(Dataset):
     def __init__(self, texts, labels,
-                tokenizer, max_length):
+                tokenizer, max_length, additional_features):
         super(BertDataset, self).__init__()
         self.tokenizer=tokenizer
         self.max_length=max_length
         self.texts=texts
         self.labels=labels
+        self.additional_features = additional_features
 
     def __len__(self):
         return len(self.labels)
@@ -32,6 +33,7 @@ class BertDataset(Dataset):
             'input_ids': torch.tensor(ids, dtype=torch.long),
             'attention_mask': torch.tensor(mask, dtype=torch.long),
             'target': torch.tensor(self.labels[index], dtype=torch.long),
+            'additional_features': torch.tensor(self.additional_features[index], dtype=torch.float),
             }
 
         if "token_type_ids" in inputs:
