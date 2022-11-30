@@ -51,7 +51,7 @@ def main():
 
     # Files to extract data from and store data in
     input_file = '../data/dev.csv'
-    output_file = '../data/dev_papi.json'
+    output_file = '../data/papi_features_dev.json'
 
     # Get attribute probabilities of all training data
     papi_dict = dict()
