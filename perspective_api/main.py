@@ -50,14 +50,14 @@ def main():
                 'TOXICITY']
 
     # Files to extract data from and store data in
-    train_file = '../data/train.csv'
-    output_file = '../data/train_papi.json'
+    input_file = '../data/dev.csv'
+    output_file = '../data/papi_features_dev.json'
 
     # Get attribute probabilities of all training data
     papi_dict = dict()
-    with open(train_file, mode='r') as train:
-        train_data = csv.DictReader(train)
-        for row in train_data:
+    with open(input_file, mode='r') as input_f:
+        input_data = csv.DictReader(input_f)
+        for row in input_data:
             response = get_response_papi(client, att_list, row['text'])
             probs = extract_probs(response)
             papi_dict[row['rewire_id']] = probs
