@@ -14,9 +14,13 @@ from sklearn.preprocessing import LabelBinarizer, LabelEncoder
 import pickle
 load()
 
+def check_iflabels_doesnotexist(df, task_type):
+    if not get_taskname(task_type) in df.columns:
+        df[get_taskname(task_type)] = ["-1"]*df.shape[0]
+    return df
+
 def space_special_chars(wrd):
     return ''.join(e if (e.isalnum() or e==" ") else f" {e} " for e in wrd)
-
 
 def segment_hashtags(stg):
     if "#" in stg:
@@ -58,6 +62,7 @@ def read_corpus(filename = "data/train.tsv", delimiter = ",", task_type = "A"):
 
     # df[["preprocessed_text", "label"]].to_csv(filename+'.check')
     reviews = df['preprocessed_text'].values.tolist()
+    check_iflabels_doesnotexist(df, task_type)
     labels = df[get_taskname(task_type)].values.tolist()
     ids = df['rewire_id'].values.tolist()
     return ids, reviews, labels
@@ -99,7 +104,7 @@ def create_class_weights(Y_train, encoder):
     print(f"Class weights are {class_weights}")
     return class_weights
 
-def write_preds(X_test, Y_test, Y_pred, filename):
+def write_preds(ids, Y_pred, filename):
     """Write test predictions along with inputs and expected outputs
     Args:
         X_test (List): Text test sentences
@@ -107,8 +112,8 @@ def write_preds(X_test, Y_test, Y_pred, filename):
         Y_pred (List): Labels predicted
     """
     txtt = []
-    for x, yt, yprd in zip(X_test, Y_test, Y_pred):
-        txtt.append("\t".join([x,yt,yprd]))
+    for idd, yprd in zip(ids, Y_pred):
+        txtt.append(",".join([idd,yprd]))
 
     with open(filename, "w") as fp:
         fp.write("\n".join(txtt))
@@ -197,3 +202,13 @@ def extract_features(ids, filename1, filename2, filename3):
     localfeatures = [ jsondata1.get(sntid,[])+jsondata2.get(sntid,[])+jsondata3.get(sntid,[]) for sntid in ids ]
     localfeatures = np.array(localfeatures)
     return localfeatures
+
+def read_data(train_file, dev_file, task_type):
+    # Read in the data
+    train_ids, X_train, Y_train = read_corpus(train_file, ",",  task_type)
+    dev_ids, X_dev, Y_dev = read_corpus(dev_file, ",", task_type)
+    if task_type != "A":
+        train_ids, X_train, Y_train = filter_none_class(train_ids, X_train, Y_train)
+        dev_ids, X_dev, Y_dev = filter_none_class(dev_ids, X_dev, Y_dev)
+
+    return train_ids, X_train, Y_train, dev_ids, X_dev, Y_dev
