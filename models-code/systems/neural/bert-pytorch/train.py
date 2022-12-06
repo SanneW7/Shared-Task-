@@ -214,24 +214,30 @@ class LitModel(pl.LightningModule):
         preds = []
         gts = []
         
+        batch_skip = False
         for item in outs:
-            if item["preds"].shape[0]!= self.batch_size: continue
+            if item["preds"].shape[0]!= self.batch_size:
+                batch_skip = True
+                continue
             preds.append(item["preds"])
             gts.append(item["gts"])
         
         preds = torch.stack(preds).view(-1)     
         gts = torch.stack(gts).view(-1)
+        if batch_skip:
+            preds = torch.cat((preds, item["preds"]), 0)
+            gts = torch.cat((gts, item["gts"]), 0)
 
-        loss = losses.mean()
-        acc = self.accuracy(preds, gts)
-        f1 = self.f1(preds, gts)
+        final_loss = losses.mean()
+        final_acc = self.accuracy(preds, gts)
+        final_f1 = self.f1(preds, gts)
 
-        self.log("test_loss_epoch", loss)
-        self.log("test_epoch_acc", acc)
-        self.log("test_epoch_f1", f1)
-        print("test_loss_epoch", loss)
-        print("test_acc_epoch", acc)
-        print("test_F1_epoch", f1)
+        # self.log("test_loss_epoch", final_loss)
+        # self.log("test_epoch_acc", final_acc)
+        # self.log("test_epoch_f1", final_f1)
+        print("test_loss_epoch", final_loss)
+        print("test_acc_epoch", final_acc)
+        print("test_F1_epoch", final_f1)
         
 
     def configure_optimizers(self):
