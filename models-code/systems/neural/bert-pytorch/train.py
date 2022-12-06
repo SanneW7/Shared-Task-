@@ -335,7 +335,7 @@ def main():
     trainer = pl.Trainer(accelerator=device_to_train, devices=1,
                         max_epochs = args.num_epochs, fast_dev_run=False,
                         callbacks=[ early_stopping, checkpoint_callback ],
-                        limit_train_batches=5, limit_val_batches=3)
+                        )
 
     with open(f"{ckpt_folder}/details_{args.task_type}.pickle", "wb") as fh:
         pickle.dump([dm.encoder, args.langmodel_name,
