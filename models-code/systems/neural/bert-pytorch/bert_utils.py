@@ -20,7 +20,7 @@ class BertDataset(Dataset):
         inputs = self.tokenizer.encode_plus(
             text = text1 ,
             text_pair = None,
-            pad_to_max_length=True,
+            padding = "max_length",
             add_special_tokens=True,
             return_attention_mask=True,
             max_length=self.max_length,

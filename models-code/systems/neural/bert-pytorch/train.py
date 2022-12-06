@@ -21,6 +21,7 @@ import torchmetrics
 import argparse
 import pickle
 import numpy as np
+from sklearn.metrics import accuracy_score, f1_score
 
 import sys
 sys.path.append("../")
@@ -108,8 +109,6 @@ class LitModel(pl.LightningModule):
         self.learning_rate = learning_rate
         self.class_weights = class_weights
         self.loss_fn =  nn.CrossEntropyLoss(weight = torch.tensor(self.class_weights, dtype=torch.float))
-        self.accuracy = torchmetrics.Accuracy()
-        self.f1 = torchmetrics.F1Score(num_classes=num_labels, average='macro')
         self.batch_size = batch_size
         self.dropout = dropout
 
@@ -132,8 +131,11 @@ class LitModel(pl.LightningModule):
         # validation metrics
         preds = torch.nn.functional.softmax(logits, dim = -1)
         preds = torch.argmax(preds, -1)
-        acc = self.accuracy(preds, batch["target"])
-        f1 = self.f1(preds, batch["target"])
+
+        preds = preds.cpu().detach().tolist()
+        gts = batch["target"].cpu().detach().tolist()
+        acc = accuracy_score(preds, gts)
+        f1 = f1_score(preds, gts, average = "macro")
 
         # Logging to TensorBoard by default
         self.log('train_loss', loss, on_step=True, on_epoch=True, logger=True)
@@ -149,30 +151,30 @@ class LitModel(pl.LightningModule):
             # validation metrics
             preds = torch.nn.functional.softmax(logits, dim = -1)
             preds = torch.argmax(preds, -1)
-            acc = self.accuracy(preds, batch["target"])
-            f1 = self.f1(preds, batch["target"])
+            preds = preds.cpu().detach().tolist()
+            gts = batch["target"].cpu().detach().tolist()
+            acc = accuracy_score(preds, gts)
+            f1 = f1_score(preds, gts, average = "macro")
 
             self.log('val_loss', loss,on_step=True, logger=True, prog_bar=True)
             self.log('val_acc', acc,on_step=True, logger=True, prog_bar=True)
             self.log('val_f1', f1,on_step=True, logger=True, prog_bar=True)
-            return {"loss": loss, "preds": preds, "gts": batch["target"]}
+            return {"loss": loss, "preds": preds, "gts": gts}
 
     def test_step(self, batch, batch_idx):
         with torch.no_grad():
-            self.model.eval()
+            self.eval()
             logits = self(**batch)
             loss = self.loss_fn(logits, batch["target"])
 
             # validation metrics
             preds = torch.nn.functional.softmax(logits, dim = -1)
             preds = torch.argmax(preds, -1)
-            acc = self.accuracy(preds, batch["target"])
-            f1 = self.f1(preds, batch["target"])
 
-            self.log('test_loss', loss,on_step=True, logger=True, prog_bar=True)
-            self.log('test_acc', acc,on_step=True, logger=True, prog_bar=True)
-            self.log('test_f1', f1,on_step=True, logger=True, prog_bar=True)
-            return {"loss": loss, "preds": preds, "gts": batch["target"]}
+            preds = preds.cpu().detach().tolist()
+            gts = batch["target"].cpu().detach().tolist()
+
+            return {"loss": loss, "preds": preds, "gts": gts}
 
     
     def predict_step(self, batch, batch_idx, dataloader_idx=0):
@@ -188,24 +190,14 @@ class LitModel(pl.LightningModule):
 
         preds = []
         gts = []
-        
-        batch_skip = False
-        for item in outs:
-            if item["preds"].shape[0]!= self.batch_size:
-                batch_skip = True
-                continue
-            preds.append(item["preds"])
-            gts.append(item["gts"])
 
-        preds = torch.stack(preds).view(-1)
-        gts = torch.stack(gts).view(-1)
-        if batch_skip:
-            preds = torch.cat((preds, item["preds"]), 0)
-            gts = torch.cat((gts, item["gts"]), 0)
+        for item in outs:
+            preds.extend(item["preds"])
+            gts.extend(item["gts"])
 
         loss = losses.mean()
-        acc = self.accuracy(preds, gts)
-        f1 = self.f1(preds, gts)
+        acc = accuracy_score(preds, gts)
+        f1 = f1_score(preds, gts, average="macro")
         
         self.log("val_loss_epoch", loss)
         self.log("val_epoch_acc", acc)
@@ -217,27 +209,18 @@ class LitModel(pl.LightningModule):
     def test_epoch_end(self,outs):
         # outs is a list of whatever you returned in `validation_step`
         losses = torch.stack([ item["loss"]  for item in outs])
-        
+
         preds = []
         gts = []
-        
-        batch_skip = False
+
         for item in outs:
-            if item["preds"].shape[0]!= self.batch_size:
-                batch_skip = True
-                continue
-            preds.append(item["preds"])
-            gts.append(item["gts"])
-        
-        preds = torch.stack(preds).view(-1)     
-        gts = torch.stack(gts).view(-1)
-        if batch_skip:
-            preds = torch.cat((preds, item["preds"]), 0)
-            gts = torch.cat((gts, item["gts"]), 0)
+            preds.extend(item["preds"])
+            gts.extend(item["gts"])
 
         final_loss = losses.mean()
-        final_acc = self.accuracy(preds, gts)
-        final_f1 = self.f1(preds, gts)
+        final_acc = accuracy_score(preds, gts)
+        final_f1 = f1_score(preds, gts, average="macro")
+
 
         print("test_loss_epoch", final_loss)
         print("test_acc_epoch", final_acc)
@@ -346,7 +329,8 @@ def main():
 
     with open(f"{ckpt_folder}/details_{args.task_type}.pickle", "wb") as fh:
         pickle.dump([dm.encoder, args.langmodel_name,
-                     numlabels, args.task_type, dm.extra_feat_len], fh)
+                     numlabels, args.task_type, dm.extra_feat_len,
+                     args.dropout], fh)
     trainer.fit(model, dm)
 
 

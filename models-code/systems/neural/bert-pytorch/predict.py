@@ -11,6 +11,7 @@ sys.path.append("../")
 
 from utils import read_corpus, filter_none_class, extract_features
 from bert_utils import BertDataset
+from evaluate import get_encoder
 
 """## INFERENCE from checkpoint"""
 
@@ -102,12 +103,6 @@ def create_arg_parser():
 
     args = parser.parse_args()
     return args
-
-
-def get_encoder(detailsfile):
-    with open(detailsfile, "rb") as fp:
-        encoder, modelname, numlabels, task_type, extra_feat_len = pickle.load(fp)
-    return encoder, modelname, numlabels, task_type, extra_feat_len
 
 def main():
     '''Main function to test neural network given cmd line arguments'''
