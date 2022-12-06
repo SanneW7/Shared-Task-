@@ -32,7 +32,7 @@ def main():
     base_lm, max_seq_len, task_type = load_picklefile(f"{args.best_modelname}.details")
     best_model, tokenizer = load_model(base_lm, num_labels= len(encoder.classes_))
     best_model.load_weights(args.best_modelname)
-    X_test, Y_test, tokens_test, Y_test_bin = read_testdata_andvectorize(args.test_file, max_seq_len, tokenizer, encoder, task_type)
+    test_ids, X_test, Y_test, tokens_test, Y_test_bin = read_testdata_andvectorize(args.test_file, max_seq_len, tokenizer, encoder, task_type)
     Y_pred, Y_test = test_set_predict(best_model, tokens_test, Y_test_bin,
                     "test", encoder, showplot=args.show_cm, task_type=task_type)
 
