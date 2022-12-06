@@ -285,6 +285,8 @@ def create_arg_parser():
     parser.add_argument("--ckpt_folder", default="./bert-files/", type=str,
                         help="Name of the checkpoint folder for saving the model")
 
+    parser.add_argument("--device", default="cpu", type=str,
+                        help="cpu/gpu")
 
     args = parser.parse_args()
     return args
@@ -323,10 +325,11 @@ def main():
                                           mode="min",
                                           filename=f"bestmodel_{args.task_type}")
 
-    trainer = pl.Trainer(accelerator='cpu', devices=1, 
+    device_to_train = args.device if torch.cuda.is_available() else "cpu"
+    trainer = pl.Trainer(accelerator=device_to_train, devices=1,
                         max_epochs = args.num_epochs, fast_dev_run=False,
                         callbacks=[ early_stopping, checkpoint_callback ],
-                        limit_train_batches=10, limit_val_batches=5)
+                        limit_train_batches=5, limit_val_batches=3)
 
     with open(f"{ckpt_folder}/details_{args.task_type}.pickle", "wb") as fh:
         pickle.dump([dm.encoder, args.langmodel_name,
