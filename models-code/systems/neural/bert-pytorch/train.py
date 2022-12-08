@@ -21,6 +21,7 @@ import torchmetrics
 import argparse
 import pickle
 import numpy as np
+from sklearn.metrics import accuracy_score, f1_score
 
 import sys
 sys.path.append("../")
@@ -70,8 +71,6 @@ class LitOffData(pl.LightningDataModule):
                                                self.hurtlex_filename.replace(".json", "_train.json"),
                                                self.empath_filename.replace(".json", "_train.json"))
         
-        # import pdb;
-        # pdb.set_trace();
         self.additional_dev_features  = extract_features(self.dev_ids, self.perspective_filename.replace(".json", "_dev.json"),
                                                self.hurtlex_filename.replace(".json", "_dev.json"),
                                                self.empath_filename.replace(".json", "_dev.json"))
@@ -102,7 +101,7 @@ class LitOffData(pl.LightningDataModule):
 # define the LightningModule
 class LitModel(pl.LightningModule):
     def __init__(self, modelname = "distilbert-base-uncased", num_labels = 2, dropout = 0.2,
-                learning_rate = 1e-5, class_weights = [1, 1], batch_size = 4,
+                learning_rate = 5e-5, class_weights = [1, 1], batch_size = 4,
                 extra_feature_len = 0):
         super().__init__()
         self.bert = AutoModel.from_pretrained(modelname)
@@ -110,9 +109,8 @@ class LitModel(pl.LightningModule):
         self.learning_rate = learning_rate
         self.class_weights = class_weights
         self.loss_fn =  nn.CrossEntropyLoss(weight = torch.tensor(self.class_weights, dtype=torch.float))
-        self.accuracy = torchmetrics.Accuracy()
-        self.f1 = torchmetrics.F1Score(num_classes=num_labels, average='macro')
         self.batch_size = batch_size
+        self.dropout = dropout
 
     def forward(self, **data):
         features = data["additional_features"]
@@ -120,7 +118,7 @@ class LitModel(pl.LightningModule):
         del data["additional_features"]
         out = self.bert( **data, return_dict=True)
         pooled_output = out.pooler_output
-        dropout_output = nn.functional.dropout(pooled_output)
+        dropout_output = nn.functional.dropout(pooled_output, p = self.dropout)
         logits = self.linear(torch.cat((dropout_output, features), 1))
         return logits
 
@@ -133,8 +131,11 @@ class LitModel(pl.LightningModule):
         # validation metrics
         preds = torch.nn.functional.softmax(logits, dim = -1)
         preds = torch.argmax(preds, -1)
-        acc = self.accuracy(preds, batch["target"])
-        f1 = self.f1(preds, batch["target"])
+
+        preds = preds.cpu().detach().tolist()
+        gts = batch["target"].cpu().detach().tolist()
+        acc = accuracy_score(preds, gts)
+        f1 = f1_score(preds, gts, average = "macro")
 
         # Logging to TensorBoard by default
         self.log('train_loss', loss, on_step=True, on_epoch=True, logger=True)
@@ -143,41 +144,45 @@ class LitModel(pl.LightningModule):
         return loss
 
     def validation_step(self, batch, batch_idx):
-        logits = self(**batch)
-        loss = self.loss_fn(logits, batch["target"])
+        with torch.no_grad():
+            logits = self(**batch)
+            loss = self.loss_fn(logits, batch["target"])
 
-        # validation metrics
-        preds = torch.nn.functional.softmax(logits, dim = -1)
-        preds = torch.argmax(preds, -1)
-        acc = self.accuracy(preds, batch["target"])
-        f1 = self.f1(preds, batch["target"])
+            # validation metrics
+            preds = torch.nn.functional.softmax(logits, dim = -1)
+            preds = torch.argmax(preds, -1)
+            preds = preds.cpu().detach().tolist()
+            gts = batch["target"].cpu().detach().tolist()
+            acc = accuracy_score(preds, gts)
+            f1 = f1_score(preds, gts, average = "macro")
 
-        self.log('val_loss', loss,on_step=True, on_epoch=True, logger=True, prog_bar=True)
-        self.log('val_acc', acc,on_step=True, on_epoch=True, logger=True, prog_bar=True)
-        self.log('val_f1', f1,on_step=True, on_epoch=True, logger=True, prog_bar=True)
-        return {"loss": loss, "preds": preds, "gts": batch["target"]}
+            self.log('val_loss', loss,on_step=True, logger=True, prog_bar=True)
+            self.log('val_acc', acc,on_step=True, logger=True, prog_bar=True)
+            self.log('val_f1', f1,on_step=True, logger=True, prog_bar=True)
+            return {"loss": loss, "preds": preds, "gts": gts}
 
     def test_step(self, batch, batch_idx):
-        logits = self(**batch)
-        loss = self.loss_fn(logits, batch["target"])
+        with torch.no_grad():
+            self.eval()
+            logits = self(**batch)
+            loss = self.loss_fn(logits, batch["target"])
 
-        # validation metrics
-        preds = torch.nn.functional.softmax(logits, dim = -1)
-        preds = torch.argmax(preds, -1)
-        acc = self.accuracy(preds, batch["target"])
-        f1 = self.f1(preds, batch["target"])
+            # validation metrics
+            preds = torch.nn.functional.softmax(logits, dim = -1)
+            preds = torch.argmax(preds, -1)
 
-        self.log('test_loss', loss,on_step=True, on_epoch=True, logger=True, prog_bar=True)
-        self.log('test_acc', acc,on_step=True, on_epoch=True, logger=True, prog_bar=True)
-        self.log('test_f1', f1,on_step=True, on_epoch=True, logger=True, prog_bar=True)
-        return {"loss": loss, "preds": preds, "gts": batch["target"]}
+            preds = preds.cpu().detach().tolist()
+            gts = batch["target"].cpu().detach().tolist()
+
+            return {"loss": loss, "preds": preds, "gts": gts}
 
     
     def predict_step(self, batch, batch_idx, dataloader_idx=0):
-        logits = self(**batch)
-        preds = torch.nn.functional.softmax(logits, dim = -1)
-        preds = torch.argmax(preds, -1)
-        return preds
+        with torch.no_grad():
+            logits = self(**batch)
+            preds = torch.nn.functional.softmax(logits, dim = -1)
+            preds = torch.argmax(preds, -1)
+            return preds
 
     def validation_epoch_end(self, outs):
         # outs is a list of whatever you returned in `validation_step`
@@ -185,20 +190,14 @@ class LitModel(pl.LightningModule):
 
         preds = []
         gts = []
-        
-        for item in outs:
-            if item["preds"].shape[0]!= self.batch_size: continue
-            preds.append(item["preds"])
-            gts.append(item["gts"])
-        
-#         pdb.set_trace();
 
-        preds = torch.stack(preds).view(-1)     
-        gts = torch.stack(gts).view(-1)
+        for item in outs:
+            preds.extend(item["preds"])
+            gts.extend(item["gts"])
 
         loss = losses.mean()
-        acc = self.accuracy(preds, gts)
-        f1 = self.f1(preds, gts)
+        acc = accuracy_score(preds, gts)
+        f1 = f1_score(preds, gts, average="macro")
         
         self.log("val_loss_epoch", loss)
         self.log("val_epoch_acc", acc)
@@ -210,31 +209,19 @@ class LitModel(pl.LightningModule):
     def test_epoch_end(self,outs):
         # outs is a list of whatever you returned in `validation_step`
         losses = torch.stack([ item["loss"]  for item in outs])
-        
+
         preds = []
         gts = []
-        
-        batch_skip = False
+
         for item in outs:
-            if item["preds"].shape[0]!= self.batch_size:
-                batch_skip = True
-                continue
-            preds.append(item["preds"])
-            gts.append(item["gts"])
-        
-        preds = torch.stack(preds).view(-1)     
-        gts = torch.stack(gts).view(-1)
-        if batch_skip:
-            preds = torch.cat((preds, item["preds"]), 0)
-            gts = torch.cat((gts, item["gts"]), 0)
+            preds.extend(item["preds"])
+            gts.extend(item["gts"])
 
         final_loss = losses.mean()
-        final_acc = self.accuracy(preds, gts)
-        final_f1 = self.f1(preds, gts)
+        final_acc = accuracy_score(preds, gts)
+        final_f1 = f1_score(preds, gts, average="macro")
 
-        # self.log("test_loss_epoch", final_loss)
-        # self.log("test_epoch_acc", final_acc)
-        # self.log("test_epoch_f1", final_f1)
+
         print("test_loss_epoch", final_loss)
         print("test_acc_epoch", final_acc)
         print("test_F1_epoch", final_f1)
@@ -243,7 +230,6 @@ class LitModel(pl.LightningModule):
     def configure_optimizers(self):
         optimizer = optim.Adam(self.parameters(), lr=self.learning_rate)
         return optimizer
-
 
 
 def create_arg_parser():
@@ -270,10 +256,10 @@ def create_arg_parser():
     parser.add_argument("--batch_size", default=32, type=int,
                         help="Batch size for training")
 
-    parser.add_argument("--num_epochs", default=2, type=int,
+    parser.add_argument("--num_epochs", default=5, type=int,
                         help="Number of epochs for training")
 
-    parser.add_argument("--max_seq_len", default=150, type=int,
+    parser.add_argument("--max_seq_len", default=200, type=int,
                         help="Maximum length of input sequence after BPE")
 
     parser.add_argument("--langmodel_name", default="bert-base-uncased", type=str,
@@ -293,6 +279,9 @@ def create_arg_parser():
 
     parser.add_argument("--device", default="cpu", type=str,
                         help="cpu/gpu")
+
+    parser.add_argument("--dropout", default=0, type=float,
+                        help="Dropout value")
 
     args = parser.parse_args()
     return args
@@ -323,7 +312,8 @@ def main():
                     num_labels= numlabels,
                     class_weights = class_weights,
                     batch_size = args.batch_size,
-                    extra_feature_len=dm.extra_feat_len)
+                    extra_feature_len=dm.extra_feat_len,
+                    dropout=args.dropout)
 
     early_stopping = EarlyStopping(monitor="val_loss", mode="min", patience = 3)
     checkpoint_callback = ModelCheckpoint(dirpath=ckpt_folder,
@@ -339,7 +329,8 @@ def main():
 
     with open(f"{ckpt_folder}/details_{args.task_type}.pickle", "wb") as fh:
         pickle.dump([dm.encoder, args.langmodel_name,
-                     numlabels, args.task_type, dm.extra_feat_len], fh)
+                     numlabels, args.task_type, dm.extra_feat_len,
+                     args.dropout], fh)
     trainer.fit(model, dm)
 
 

@@ -47,14 +47,14 @@ def create_arg_parser():
 
 def get_encoder(detailsfile):
     with open(detailsfile, "rb") as fp:
-        encoder, modelname, numlabels, task_type, extra_feat_len = pickle.load(fp)
-    return encoder, modelname, numlabels, task_type, extra_feat_len
+        encoder, modelname, numlabels, task_type, extra_feat_len, dropout = pickle.load(fp)
+    return encoder, modelname, numlabels, task_type, extra_feat_len, dropout
 
 def main():
     '''Main function to test neural network given cmd line arguments'''
     args = create_arg_parser()
     encoder, basemodelname,\
-    numlabels, task_type, model_extra_feat_len = get_encoder(f"{args.best_modelname}/details_{args.task_type}.pickle")
+    numlabels, task_type, model_extra_feat_len, dropout = get_encoder(f"{args.best_modelname}/details_{args.task_type}.pickle")
     print(task_type, args.task_type, basemodelname, numlabels, model_extra_feat_len)
     assert task_type==args.task_type, "Make sure correct model files are passed"
     testdm = Inference_LitOffData(test_file = args.test_file,
@@ -66,7 +66,8 @@ def main():
     model = LitModel.load_from_checkpoint(f"{args.best_modelname}/bestmodel_{task_type}.ckpt", 
                                          modelname = basemodelname, num_labels = numlabels,
                                          class_weights = [1]*numlabels,
-                                         extra_feature_len=model_extra_feat_len)
+                                         extra_feature_len=model_extra_feat_len,
+                                         dropout = )
     model.eval()
     device_to_train = args.device if torch.cuda.is_available() else "cpu"
     print("Device to use ", device_to_train)
