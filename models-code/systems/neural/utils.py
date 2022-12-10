@@ -1,5 +1,6 @@
 
 import emoji
+import json
 import numpy as np
 import pandas as pd
 import seaborn as sn
@@ -8,14 +9,18 @@ from wordsegment import load, segment
 from sklearn.utils import class_weight
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import accuracy_score, f1_score
-from sklearn.preprocessing import LabelBinarizer
+from sklearn.preprocessing import LabelBinarizer, LabelEncoder
 
 import pickle
 load()
 
+def check_iflabels_doesnotexist(df, task_type):
+    if not get_taskname(task_type) in df.columns:
+        df[get_taskname(task_type)] = ["-1"]*df.shape[0]
+    return df
+
 def space_special_chars(wrd):
     return ''.join(e if (e.isalnum() or e==" ") else f" {e} " for e in wrd)
-
 
 def segment_hashtags(stg):
     if "#" in stg:
@@ -57,9 +62,10 @@ def read_corpus(filename = "data/train.tsv", delimiter = ",", task_type = "A"):
 
     # df[["preprocessed_text", "label"]].to_csv(filename+'.check')
     reviews = df['preprocessed_text'].values.tolist()
+    check_iflabels_doesnotexist(df, task_type)
     labels = df[get_taskname(task_type)].values.tolist()
-
-    return reviews, labels
+    ids = df['rewire_id'].values.tolist()
+    return ids, reviews, labels
 
 
 def get_taskname(task_type = "A"):
@@ -83,10 +89,14 @@ def plot_confusion_matrix(matrix):
     fig.savefig("heatmap.png")
     return
 
-def create_class_weights(Y_train, encoder):
+def compute_class_weights(encoder, Y_train):
     class_weightscores = class_weight.compute_class_weight(class_weight = 'balanced'
-                                                ,classes = encoder.classes_
-                                                ,y = Y_train)
+                                            ,classes = encoder.classes_
+                                            ,y = Y_train)
+    return class_weightscores
+
+def create_class_weights(Y_train, encoder):
+    class_weightscores = compute_class_weights(encoder, Y_train)
     classname2id = dict((name, ix) for (ix, name) in enumerate(encoder.classes_))
     class_weights = dict( (k,v) for (k,v) in zip(encoder.classes_, class_weightscores))
     print(f"Class weights are {class_weights}")
@@ -94,7 +104,7 @@ def create_class_weights(Y_train, encoder):
     print(f"Class weights are {class_weights}")
     return class_weights
 
-def write_preds(X_test, Y_test, Y_pred, filename):
+def write_preds(ids, Y_pred, filename):
     """Write test predictions along with inputs and expected outputs
     Args:
         X_test (List): Text test sentences
@@ -102,21 +112,11 @@ def write_preds(X_test, Y_test, Y_pred, filename):
         Y_pred (List): Labels predicted
     """
     txtt = []
-    for x, yt, yprd in zip(X_test, Y_test, Y_pred):
-        txtt.append("\t".join([x,yt,yprd]))
+    for idd, yprd in zip(ids, Y_pred):
+        txtt.append(",".join([idd,yprd]))
 
     with open(filename, "w") as fp:
         fp.write("\n".join(txtt))
-
-def read_data(args):
-    # Read in the data
-    X_train, Y_train = read_corpus(args.train_file, ",",  args.task_type)
-    X_dev, Y_dev = read_corpus(args.dev_file, ",", args.task_type)
-    if args.task_type != "A":
-        X_train, Y_train = filter_none_class(X_train, Y_train)
-        X_dev, Y_dev = filter_none_class(X_dev, Y_dev)
-
-    return X_train, Y_train, X_dev, Y_dev
 
 def test_set_predict(model, X_test, Y_test,
                      ident, encoder, showplot,
@@ -161,15 +161,54 @@ def numerize_labels(Y_train, Y_dev, task_type = "A"):
     # Transform string labels to one-hot encodings
     encoder = LabelBinarizer()
     Y_train_bin = encoder.fit_transform(Y_train)  # Use encoder.classes_ to find mapping back
-    Y_dev_bin = encoder.fit_transform(Y_dev)
+    Y_dev_bin = encoder.transform(Y_dev)
     return encoder, Y_train_bin, Y_dev_bin
 
-def filter_none_class(reviews, labels):
+def numerize_labels_pytorch(Y_train, Y_dev):
+    # Transform string labels to one-hot encodings
+    encoder = LabelEncoder()
+    encoder.fit(Y_train)  # Use encoder.classes_ to find mapping back
+    Y_train_bin = encoder.transform(Y_train)
+    Y_dev_bin = encoder.transform(Y_dev)
+    return encoder, Y_train_bin, Y_dev_bin
+
+
+def filter_none_class(ids, reviews, labels):
+  new_list_id = []
   new_list_text = []
   new_list_label = []
-  for review, lbl in zip(reviews, labels):
+  for id, review, lbl in zip(ids, reviews, labels):
     if lbl != "none":
       new_list_text.append(review)
       new_list_label.append(lbl)
-  
-  return new_list_text, new_list_label
+      new_list_id.append(id)
+  return new_list_id, new_list_text, new_list_label
+
+def read_json_default(filename):
+    if filename=="": return {}
+    data = read_json(filename)
+    return data
+
+def read_json(filename):
+    with open(filename, 'r') as fp:
+        data = json.load(fp)    
+    return data
+
+def extract_features(ids, filename1, filename2, filename3):
+    localfeatures = [[]*len(ids)]
+    jsondata1 = read_json_default(filename1)
+    jsondata2 = read_json_default(filename2)
+    jsondata3 = read_json_default(filename3)
+    localfeatures = [ jsondata1.get(sntid,[])+jsondata2.get(sntid,[])+jsondata3.get(sntid,[]) for sntid in ids ]
+    localfeatures = np.array(localfeatures)
+    return localfeatures
+
+def read_data(train_file, dev_file, task_type):
+    # Read in the data
+    train_ids, X_train, Y_train = read_corpus(train_file, ",",  task_type)
+    dev_ids, X_dev, Y_dev = read_corpus(dev_file, ",", task_type)
+    if task_type != "A":
+        train_ids, X_train, Y_train = filter_none_class(train_ids, X_train, Y_train)
+        dev_ids, X_dev, Y_dev = filter_none_class(dev_ids, X_dev, Y_dev)
+
+    return train_ids, X_train, Y_train, dev_ids, X_dev, Y_dev
