@@ -161,7 +161,7 @@ def numerize_labels(Y_train, Y_dev, task_type = "A"):
     # Transform string labels to one-hot encodings
     encoder = LabelBinarizer()
     Y_train_bin = encoder.fit_transform(Y_train)  # Use encoder.classes_ to find mapping back
-    Y_dev_bin = encoder.fit_transform(Y_dev)
+    Y_dev_bin = encoder.transform(Y_dev)
     return encoder, Y_train_bin, Y_dev_bin
 
 def numerize_labels_pytorch(Y_train, Y_dev):
