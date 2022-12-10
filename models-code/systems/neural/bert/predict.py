@@ -15,7 +15,7 @@ def create_arg_parser():
     parser.add_argument("--best_modelname", default="models/bert-outputs", type=str,
                         help="Name of the trained model that will be saved after training")
 
-    parser.add_argument("--output_predfile", type=str, default='preds.txt', required= True,
+    parser.add_argument("--output_predfile", type=str, default='preds.csv', required= True,
                         help="File to store the predictions. Each prediction in a line")
 
     parser.add_argument("--batch_size", default=16, type=int,
