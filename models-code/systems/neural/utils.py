@@ -119,10 +119,8 @@ def write_preds(ids, Y_pred, filename):
     with open(filename, "w") as fp:
         fp.write("\n".join(txtt))
 
-def test_set_predict(model, X_test, Y_test,
-                     ident, encoder, showplot,
-                     task_type):
-    '''Do predictions and measure accuracy on our own test set (that we split off train)'''
+def get_preds(model, X_test, task_type, encoder):
+    '''Do predictions'''
     # Get predictions using the trained model
     try:
         Y_pred = model.predict(X_test).logits # For BERT
@@ -138,6 +136,11 @@ def test_set_predict(model, X_test, Y_test,
         Y_test = np.argmax(Y_test, axis=1)
 
     Y_pred = [encoder.classes_[el] for el in Y_pred]
+
+def test_set_predict(model, X_test, Y_test,
+                     ident, encoder, showplot,
+                     task_type):
+    Y_pred = get_preds(model, X_test, task_type, encoder)
     Y_test = [encoder.classes_[el] for el in Y_test]
 
     print('Accuracy on own {1} set: {0}'.format(round(accuracy_score(Y_test, Y_pred), 3), ident))

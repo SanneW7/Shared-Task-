@@ -3,7 +3,7 @@ import argparse
 import sys
 sys.path.append("../")
 
-from utils import load_picklefile, test_set_predict, write_preds
+from utils import load_picklefile, get_preds, write_preds
 from bert_utils import load_model, read_testdata_andvectorize
 
 def create_arg_parser():
@@ -39,9 +39,8 @@ def main():
     encoder = load_picklefile(f"{args.best_modelname}_task_{task_type}.pickle")
     best_model, tokenizer = load_model(base_lm, num_labels= len(encoder.classes_))
     best_model.load_weights(f"{args.best_modelname}_task_{task_type}")
-    test_ids, X_test, Y_test, tokens_test, Y_test_bin = read_testdata_andvectorize(args.test_file, max_seq_len, tokenizer, encoder, task_type)
-    Y_pred, Y_test = test_set_predict(best_model, tokens_test, Y_test_bin,
-                    "test", encoder, showplot=args.show_cm, task_type=task_type)
+    test_ids, X_test, Y_test, tokens_test = read_testdata_andvectorize(args.test_file, max_seq_len, tokenizer, encoder, task_type)
+    Y_pred = get_preds(model = best_model, X_test =  tokens_test, task_type=task_type,encoder= encoder)
     write_preds(test_ids, Y_pred, args.output_predfile)
 
 if __name__ == '__main__':
