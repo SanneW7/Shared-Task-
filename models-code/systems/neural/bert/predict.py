@@ -38,7 +38,7 @@ def main():
     assert task_type==args.task_type, "Make sure correct model files are passed\n Check task type"
     encoder = load_picklefile(f"{args.best_modelname}_task_{task_type}.pickle")
     best_model, tokenizer = load_model(base_lm, num_labels= len(encoder.classes_))
-    best_model.load_weights(args.best_modelname)
+    best_model.load_weights(f"{args.best_modelname}_task_{task_type}")
     test_ids, X_test, Y_test, tokens_test, Y_test_bin = read_testdata_andvectorize(args.test_file, max_seq_len, tokenizer, encoder, task_type)
     Y_pred, Y_test = test_set_predict(best_model, tokens_test, Y_test_bin,
                     "test", encoder, showplot=args.show_cm, task_type=task_type)
