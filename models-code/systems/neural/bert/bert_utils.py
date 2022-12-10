@@ -25,5 +25,5 @@ def read_testdata_andvectorize(test_filename, max_seq_len, tokenizer, encoder, t
         test_ids, X_test, Y_test = filter_none_class(test_ids, X_test, Y_test)
 
     tokens_test = vectorize_inputtext(max_seq_len, tokenizer, X_test)
-    Y_test_bin = encoder.fit_transform(Y_test)
+    Y_test_bin = encoder.transform(Y_test)
     return test_ids, X_test, Y_test, tokens_test, Y_test_bin
