@@ -27,3 +27,8 @@ python code.py --input_file  ./starting_kit/train_all_tasks.csv --task_type B --
 
 ### Hurtlex
 The order of the used categories is as follows: "ps", "pa", "ddf", "ddp", "asf", "pr", "om", "qas", "cds", "asm"
+
+### Empath
+The order of the used categories is as follows: "sexism", "violence", "money", "valuable" "domestic work", "hate", "aggression", "anticipation", "crime", "weakness",
+                 "horror", "swearing terms", "kill", "sexual", "cooking",
+                 "exasperation", "body", "ridicule", "disgust", "anger", "rage"
