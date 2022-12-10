@@ -130,17 +130,18 @@ def get_preds(model, X_test, task_type, encoder):
     Y_pred = np.argmax(Y_pred, axis=1)
     # If you have gold data, you can calculate accuracy
 
-    if task_type == "A":
-        Y_test = [el[0] for el in list(Y_test)]
-    else:
-        Y_test = np.argmax(Y_test, axis=1)
-
     Y_pred = [encoder.classes_[el] for el in Y_pred]
 
 def test_set_predict(model, X_test, Y_test,
                      ident, encoder, showplot,
                      task_type):
     Y_pred = get_preds(model, X_test, task_type, encoder)
+
+    if task_type == "A":
+        Y_test = [el[0] for el in list(Y_test)]
+    else:
+        Y_test = np.argmax(Y_test, axis=1)
+
     Y_test = [encoder.classes_[el] for el in Y_test]
 
     print('Accuracy on own {1} set: {0}'.format(round(accuracy_score(Y_test, Y_pred), 3), ident))
