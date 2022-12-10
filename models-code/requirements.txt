@@ -13,3 +13,4 @@ sentencepiece
 seaborn
 nltk
 spacy==3.4.2
+empath
