@@ -112,8 +112,9 @@ def write_preds(ids, Y_pred, filename):
         Y_pred (List): Labels predicted
     """
     txtt = []
+    txtt.append(["label_pred","rewire_id"])
     for idd, yprd in zip(ids, Y_pred):
-        txtt.append(",".join([idd,yprd]))
+        txtt.append(",".join([yprd, idd]))
 
     with open(filename, "w") as fp:
         fp.write("\n".join(txtt))
