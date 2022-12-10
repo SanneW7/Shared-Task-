@@ -131,6 +131,7 @@ def get_preds(model, X_test, task_type, encoder):
     # If you have gold data, you can calculate accuracy
 
     Y_pred = [encoder.classes_[el] for el in Y_pred]
+    return Y_pred
 
 def test_set_predict(model, X_test, Y_test,
                      ident, encoder, showplot,
