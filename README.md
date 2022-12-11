@@ -27,3 +27,6 @@ python code.py --input_file  ./starting_kit/train_all_tasks.csv --task_type B --
 
 ### Hurtlex
 The order of the used categories is as follows: "ps", "pa", "ddf", "ddp", "asf", "pr", "om", "qas", "cds", "asm"
+
+### PerspectiveAPI
+PerspectiveAPI features are represented by a vector consisting of 9 values. The categories corresponding to each value are in alphabetical order; "FLIRTATION", "IDENTITY_ATTACK", "INSULT", "OBSCENE", "PROFANITY", "SEVERE_TOXICITY", "SEXUALLY_EXPLICIT", "THREAT" and "TOXICITY".
