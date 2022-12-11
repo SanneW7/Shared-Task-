@@ -112,16 +112,15 @@ def write_preds(ids, Y_pred, filename):
         Y_pred (List): Labels predicted
     """
     txtt = []
+    txtt.append(",".join(["label_pred","rewire_id"]) )
     for idd, yprd in zip(ids, Y_pred):
-        txtt.append(",".join([idd,yprd]))
+        txtt.append(",".join([yprd, idd]))
 
     with open(filename, "w") as fp:
         fp.write("\n".join(txtt))
 
-def test_set_predict(model, X_test, Y_test,
-                     ident, encoder, showplot,
-                     task_type):
-    '''Do predictions and measure accuracy on our own test set (that we split off train)'''
+def get_preds(model, X_test, task_type, encoder):
+    '''Do predictions'''
     # Get predictions using the trained model
     try:
         Y_pred = model.predict(X_test).logits # For BERT
@@ -131,12 +130,19 @@ def test_set_predict(model, X_test, Y_test,
     Y_pred = np.argmax(Y_pred, axis=1)
     # If you have gold data, you can calculate accuracy
 
+    Y_pred = [encoder.classes_[el] for el in Y_pred]
+    return Y_pred
+
+def test_set_predict(model, X_test, Y_test,
+                     ident, encoder, showplot,
+                     task_type):
+    Y_pred = get_preds(model, X_test, task_type, encoder)
+
     if task_type == "A":
         Y_test = [el[0] for el in list(Y_test)]
     else:
         Y_test = np.argmax(Y_test, axis=1)
 
-    Y_pred = [encoder.classes_[el] for el in Y_pred]
     Y_test = [encoder.classes_[el] for el in Y_test]
 
     print('Accuracy on own {1} set: {0}'.format(round(accuracy_score(Y_test, Y_pred), 3), ident))
@@ -161,7 +167,7 @@ def numerize_labels(Y_train, Y_dev, task_type = "A"):
     # Transform string labels to one-hot encodings
     encoder = LabelBinarizer()
     Y_train_bin = encoder.fit_transform(Y_train)  # Use encoder.classes_ to find mapping back
-    Y_dev_bin = encoder.fit_transform(Y_dev)
+    Y_dev_bin = encoder.transform(Y_dev)
     return encoder, Y_train_bin, Y_dev_bin
 
 def numerize_labels_pytorch(Y_train, Y_dev):
