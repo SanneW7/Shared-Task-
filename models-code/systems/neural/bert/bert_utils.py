@@ -8,7 +8,10 @@ from utils import read_corpus, filter_none_class, get_taskname
 def load_model(lm = "bert-base-uncased", num_labels=2):
     tokenizer = AutoTokenizer.from_pretrained(lm)
     tokenizer.add_tokens("[NUM]")
-    model = TFAutoModelForSequenceClassification.from_pretrained(lm, num_labels= num_labels)
+    try:
+        model = TFAutoModelForSequenceClassification.from_pretrained(lm, num_labels= num_labels)
+    except:
+        model = TFAutoModelForSequenceClassification.from_pretrained(lm, from_pt=True, num_labels= num_labels)
     model.resize_token_embeddings(len(tokenizer))
     return model, tokenizer
 
