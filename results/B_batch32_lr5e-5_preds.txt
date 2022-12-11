@@ -1,0 +1,487 @@
+label_pred,rewire_id
+3. animosity,sexism2022_english-739
+3. animosity,sexism2022_english-10787
+2. derogation,sexism2022_english-18547
+1. threats, plans to harm and incitement,sexism2022_english-6425
+2. derogation,sexism2022_english-10001
+2. derogation,sexism2022_english-15023
+2. derogation,sexism2022_english-8553
+1. threats, plans to harm and incitement,sexism2022_english-17476
+3. animosity,sexism2022_english-15941
+2. derogation,sexism2022_english-9349
+2. derogation,sexism2022_english-514
+3. animosity,sexism2022_english-9169
+3. animosity,sexism2022_english-18779
+2. derogation,sexism2022_english-14791
+3. animosity,sexism2022_english-13279
+3. animosity,sexism2022_english-2383
+3. animosity,sexism2022_english-14501
+1. threats, plans to harm and incitement,sexism2022_english-15180
+2. derogation,sexism2022_english-15646
+3. animosity,sexism2022_english-17466
+2. derogation,sexism2022_english-12306
+2. derogation,sexism2022_english-1229
+3. animosity,sexism2022_english-12468
+4. prejudiced discussions,sexism2022_english-16046
+3. animosity,sexism2022_english-1179
+3. animosity,sexism2022_english-439
+2. derogation,sexism2022_english-15084
+1. threats, plans to harm and incitement,sexism2022_english-17759
+2. derogation,sexism2022_english-21
+3. animosity,sexism2022_english-1369
+3. animosity,sexism2022_english-16460
+3. animosity,sexism2022_english-2126
+2. derogation,sexism2022_english-14982
+2. derogation,sexism2022_english-16496
+1. threats, plans to harm and incitement,sexism2022_english-19253
+2. derogation,sexism2022_english-12634
+3. animosity,sexism2022_english-6180
+3. animosity,sexism2022_english-12411
+2. derogation,sexism2022_english-533
+2. derogation,sexism2022_english-18060
+3. animosity,sexism2022_english-7646
+1. threats, plans to harm and incitement,sexism2022_english-1515
+2. derogation,sexism2022_english-8960
+2. derogation,sexism2022_english-1052
+2. derogation,sexism2022_english-2021
+4. prejudiced discussions,sexism2022_english-3712
+3. animosity,sexism2022_english-19132
+3. animosity,sexism2022_english-2647
+3. animosity,sexism2022_english-17438
+2. derogation,sexism2022_english-19946
+2. derogation,sexism2022_english-12216
+3. animosity,sexism2022_english-12361
+2. derogation,sexism2022_english-1623
+3. animosity,sexism2022_english-18165
+4. prejudiced discussions,sexism2022_english-16942
+2. derogation,sexism2022_english-8954
+2. derogation,sexism2022_english-6571
+2. derogation,sexism2022_english-10276
+2. derogation,sexism2022_english-10607
+2. derogation,sexism2022_english-18539
+3. animosity,sexism2022_english-15161
+2. derogation,sexism2022_english-9596
+3. animosity,sexism2022_english-18964
+3. animosity,sexism2022_english-15942
+4. prejudiced discussions,sexism2022_english-13944
+2. derogation,sexism2022_english-9395
+2. derogation,sexism2022_english-15695
+3. animosity,sexism2022_english-3416
+2. derogation,sexism2022_english-13428
+2. derogation,sexism2022_english-15523
+3. animosity,sexism2022_english-11653
+2. derogation,sexism2022_english-10397
+2. derogation,sexism2022_english-17359
+3. animosity,sexism2022_english-13387
+1. threats, plans to harm and incitement,sexism2022_english-6082
+3. animosity,sexism2022_english-9662
+1. threats, plans to harm and incitement,sexism2022_english-18934
+2. derogation,sexism2022_english-16574
+2. derogation,sexism2022_english-2504
+3. animosity,sexism2022_english-1566
+3. animosity,sexism2022_english-15002
+2. derogation,sexism2022_english-1073
+2. derogation,sexism2022_english-19492
+3. animosity,sexism2022_english-18460
+3. animosity,sexism2022_english-18040
+2. derogation,sexism2022_english-8248
+1. threats, plans to harm and incitement,sexism2022_english-18504
+2. derogation,sexism2022_english-1615
+2. derogation,sexism2022_english-13349
+2. derogation,sexism2022_english-10666
+3. animosity,sexism2022_english-1197
+1. threats, plans to harm and incitement,sexism2022_english-15269
+2. derogation,sexism2022_english-19026
+2. derogation,sexism2022_english-15958
+2. derogation,sexism2022_english-14348
+2. derogation,sexism2022_english-5347
+2. derogation,sexism2022_english-15065
+3. animosity,sexism2022_english-17037
+2. derogation,sexism2022_english-15696
+3. animosity,sexism2022_english-7915
+2. derogation,sexism2022_english-17613
+2. derogation,sexism2022_english-10925
+2. derogation,sexism2022_english-9022
+2. derogation,sexism2022_english-16561
+2. derogation,sexism2022_english-10881
+2. derogation,sexism2022_english-1816
+2. derogation,sexism2022_english-13281
+1. threats, plans to harm and incitement,sexism2022_english-13608
+3. animosity,sexism2022_english-11416
+2. derogation,sexism2022_english-15230
+3. animosity,sexism2022_english-13937
+3. animosity,sexism2022_english-7049
+4. prejudiced discussions,sexism2022_english-6388
+2. derogation,sexism2022_english-9605
+2. derogation,sexism2022_english-17486
+2. derogation,sexism2022_english-17521
+2. derogation,sexism2022_english-608
+3. animosity,sexism2022_english-9514
+2. derogation,sexism2022_english-8612
+3. animosity,sexism2022_english-12787
+4. prejudiced discussions,sexism2022_english-9393
+1. threats, plans to harm and incitement,sexism2022_english-7086
+2. derogation,sexism2022_english-8066
+2. derogation,sexism2022_english-6370
+3. animosity,sexism2022_english-13595
+3. animosity,sexism2022_english-11319
+3. animosity,sexism2022_english-10198
+3. animosity,sexism2022_english-10522
+2. derogation,sexism2022_english-16650
+3. animosity,sexism2022_english-50
+4. prejudiced discussions,sexism2022_english-9314
+3. animosity,sexism2022_english-1028
+3. animosity,sexism2022_english-3243
+1. threats, plans to harm and incitement,sexism2022_english-8852
+2. derogation,sexism2022_english-7955
+3. animosity,sexism2022_english-12879
+2. derogation,sexism2022_english-4170
+3. animosity,sexism2022_english-7502
+3. animosity,sexism2022_english-1737
+3. animosity,sexism2022_english-16793
+2. derogation,sexism2022_english-19496
+3. animosity,sexism2022_english-5565
+3. animosity,sexism2022_english-11494
+2. derogation,sexism2022_english-12422
+4. prejudiced discussions,sexism2022_english-15442
+1. threats, plans to harm and incitement,sexism2022_english-11880
+4. prejudiced discussions,sexism2022_english-1498
+1. threats, plans to harm and incitement,sexism2022_english-13776
+3. animosity,sexism2022_english-605
+3. animosity,sexism2022_english-10847
+2. derogation,sexism2022_english-12968
+2. derogation,sexism2022_english-4491
+2. derogation,sexism2022_english-9736
+1. threats, plans to harm and incitement,sexism2022_english-2517
+2. derogation,sexism2022_english-9183
+1. threats, plans to harm and incitement,sexism2022_english-13059
+3. animosity,sexism2022_english-15961
+2. derogation,sexism2022_english-3291
+4. prejudiced discussions,sexism2022_english-6312
+1. threats, plans to harm and incitement,sexism2022_english-17031
+1. threats, plans to harm and incitement,sexism2022_english-8036
+1. threats, plans to harm and incitement,sexism2022_english-11601
+4. prejudiced discussions,sexism2022_english-17634
+2. derogation,sexism2022_english-16202
+3. animosity,sexism2022_english-8777
+2. derogation,sexism2022_english-14812
+2. derogation,sexism2022_english-4909
+2. derogation,sexism2022_english-6379
+3. animosity,sexism2022_english-7568
+2. derogation,sexism2022_english-3959
+1. threats, plans to harm and incitement,sexism2022_english-9483
+2. derogation,sexism2022_english-904
+2. derogation,sexism2022_english-9416
+2. derogation,sexism2022_english-7271
+2. derogation,sexism2022_english-12459
+2. derogation,sexism2022_english-4240
+2. derogation,sexism2022_english-6366
+2. derogation,sexism2022_english-13727
+2. derogation,sexism2022_english-2774
+3. animosity,sexism2022_english-14677
+2. derogation,sexism2022_english-4251
+2. derogation,sexism2022_english-11978
+2. derogation,sexism2022_english-10671
+3. animosity,sexism2022_english-3626
+2. derogation,sexism2022_english-10323
+2. derogation,sexism2022_english-3654
+4. prejudiced discussions,sexism2022_english-708
+3. animosity,sexism2022_english-17425
+3. animosity,sexism2022_english-9197
+3. animosity,sexism2022_english-12311
+3. animosity,sexism2022_english-6866
+3. animosity,sexism2022_english-4387
+3. animosity,sexism2022_english-17639
+4. prejudiced discussions,sexism2022_english-14844
+2. derogation,sexism2022_english-6558
+3. animosity,sexism2022_english-12566
+3. animosity,sexism2022_english-18447
+2. derogation,sexism2022_english-8729
+2. derogation,sexism2022_english-3580
+3. animosity,sexism2022_english-6734
+1. threats, plans to harm and incitement,sexism2022_english-12974
+2. derogation,sexism2022_english-15168
+3. animosity,sexism2022_english-9268
+2. derogation,sexism2022_english-5450
+2. derogation,sexism2022_english-8121
+3. animosity,sexism2022_english-10133
+3. animosity,sexism2022_english-12041
+3. animosity,sexism2022_english-3122
+1. threats, plans to harm and incitement,sexism2022_english-16618
+3. animosity,sexism2022_english-14121
+2. derogation,sexism2022_english-13849
+2. derogation,sexism2022_english-7412
+2. derogation,sexism2022_english-14468
+2. derogation,sexism2022_english-1074
+2. derogation,sexism2022_english-7969
+2. derogation,sexism2022_english-5150
+2. derogation,sexism2022_english-4222
+2. derogation,sexism2022_english-13119
+2. derogation,sexism2022_english-16590
+2. derogation,sexism2022_english-704
+1. threats, plans to harm and incitement,sexism2022_english-4331
+1. threats, plans to harm and incitement,sexism2022_english-8555
+2. derogation,sexism2022_english-3996
+4. prejudiced discussions,sexism2022_english-17748
+3. animosity,sexism2022_english-8544
+2. derogation,sexism2022_english-7776
+4. prejudiced discussions,sexism2022_english-9627
+2. derogation,sexism2022_english-11597
+2. derogation,sexism2022_english-19493
+2. derogation,sexism2022_english-5650
+2. derogation,sexism2022_english-18816
+3. animosity,sexism2022_english-13862
+1. threats, plans to harm and incitement,sexism2022_english-19731
+3. animosity,sexism2022_english-5386
+2. derogation,sexism2022_english-15817
+4. prejudiced discussions,sexism2022_english-5445
+3. animosity,sexism2022_english-6538
+3. animosity,sexism2022_english-12833
+3. animosity,sexism2022_english-11875
+2. derogation,sexism2022_english-13416
+2. derogation,sexism2022_english-4821
+2. derogation,sexism2022_english-17572
+2. derogation,sexism2022_english-14932
+2. derogation,sexism2022_english-5253
+3. animosity,sexism2022_english-19300
+2. derogation,sexism2022_english-3405
+2. derogation,sexism2022_english-5903
+2. derogation,sexism2022_english-16069
+3. animosity,sexism2022_english-16424
+2. derogation,sexism2022_english-4385
+4. prejudiced discussions,sexism2022_english-18042
+3. animosity,sexism2022_english-3946
+2. derogation,sexism2022_english-9357
+3. animosity,sexism2022_english-5492
+2. derogation,sexism2022_english-13622
+3. animosity,sexism2022_english-18157
+3. animosity,sexism2022_english-5231
+3. animosity,sexism2022_english-12401
+2. derogation,sexism2022_english-12904
+3. animosity,sexism2022_english-19275
+2. derogation,sexism2022_english-9104
+3. animosity,sexism2022_english-4057
+1. threats, plans to harm and incitement,sexism2022_english-7867
+3. animosity,sexism2022_english-8194
+2. derogation,sexism2022_english-8311
+2. derogation,sexism2022_english-1307
+4. prejudiced discussions,sexism2022_english-15869
+3. animosity,sexism2022_english-18927
+2. derogation,sexism2022_english-13942
+2. derogation,sexism2022_english-17157
+3. animosity,sexism2022_english-1186
+2. derogation,sexism2022_english-15812
+3. animosity,sexism2022_english-15915
+2. derogation,sexism2022_english-5399
+3. animosity,sexism2022_english-108
+1. threats, plans to harm and incitement,sexism2022_english-12175
+2. derogation,sexism2022_english-9519
+2. derogation,sexism2022_english-16504
+2. derogation,sexism2022_english-4564
+3. animosity,sexism2022_english-7288
+4. prejudiced discussions,sexism2022_english-13732
+2. derogation,sexism2022_english-1475
+1. threats, plans to harm and incitement,sexism2022_english-2332
+2. derogation,sexism2022_english-10992
+2. derogation,sexism2022_english-9778
+2. derogation,sexism2022_english-14930
+2. derogation,sexism2022_english-17807
+3. animosity,sexism2022_english-12032
+2. derogation,sexism2022_english-19760
+1. threats, plans to harm and incitement,sexism2022_english-15701
+3. animosity,sexism2022_english-9528
+4. prejudiced discussions,sexism2022_english-15273
+3. animosity,sexism2022_english-12094
+2. derogation,sexism2022_english-1562
+4. prejudiced discussions,sexism2022_english-14325
+3. animosity,sexism2022_english-17287
+1. threats, plans to harm and incitement,sexism2022_english-16273
+3. animosity,sexism2022_english-1232
+2. derogation,sexism2022_english-16713
+3. animosity,sexism2022_english-795
+4. prejudiced discussions,sexism2022_english-11825
+4. prejudiced discussions,sexism2022_english-1657
+3. animosity,sexism2022_english-14707
+2. derogation,sexism2022_english-15874
+2. derogation,sexism2022_english-19408
+4. prejudiced discussions,sexism2022_english-19746
+2. derogation,sexism2022_english-9686
+2. derogation,sexism2022_english-639
+2. derogation,sexism2022_english-890
+2. derogation,sexism2022_english-16876
+2. derogation,sexism2022_english-7632
+1. threats, plans to harm and incitement,sexism2022_english-1171
+3. animosity,sexism2022_english-7944
+2. derogation,sexism2022_english-11070
+2. derogation,sexism2022_english-6430
+1. threats, plans to harm and incitement,sexism2022_english-480
+4. prejudiced discussions,sexism2022_english-14477
+2. derogation,sexism2022_english-7936
+2. derogation,sexism2022_english-16660
+2. derogation,sexism2022_english-1441
+3. animosity,sexism2022_english-6076
+3. animosity,sexism2022_english-2922
+1. threats, plans to harm and incitement,sexism2022_english-93
+2. derogation,sexism2022_english-8273
+2. derogation,sexism2022_english-16587
+2. derogation,sexism2022_english-9379
+3. animosity,sexism2022_english-13932
+3. animosity,sexism2022_english-11732
+3. animosity,sexism2022_english-12591
+2. derogation,sexism2022_english-19194
+3. animosity,sexism2022_english-5966
+2. derogation,sexism2022_english-14753
+3. animosity,sexism2022_english-9903
+2. derogation,sexism2022_english-13965
+2. derogation,sexism2022_english-19416
+2. derogation,sexism2022_english-11855
+2. derogation,sexism2022_english-18174
+2. derogation,sexism2022_english-1579
+2. derogation,sexism2022_english-8743
+2. derogation,sexism2022_english-4700
+2. derogation,sexism2022_english-3471
+2. derogation,sexism2022_english-8999
+3. animosity,sexism2022_english-16006
+1. threats, plans to harm and incitement,sexism2022_english-13686
+2. derogation,sexism2022_english-14451
+2. derogation,sexism2022_english-18745
+2. derogation,sexism2022_english-16351
+1. threats, plans to harm and incitement,sexism2022_english-15676
+2. derogation,sexism2022_english-6661
+2. derogation,sexism2022_english-12719
+2. derogation,sexism2022_english-7060
+3. animosity,sexism2022_english-7882
+3. animosity,sexism2022_english-16858
+1. threats, plans to harm and incitement,sexism2022_english-16613
+1. threats, plans to harm and incitement,sexism2022_english-9553
+3. animosity,sexism2022_english-8944
+2. derogation,sexism2022_english-5174
+3. animosity,sexism2022_english-9301
+4. prejudiced discussions,sexism2022_english-2448
+3. animosity,sexism2022_english-9473
+3. animosity,sexism2022_english-8368
+3. animosity,sexism2022_english-18020
+3. animosity,sexism2022_english-11519
+3. animosity,sexism2022_english-2393
+3. animosity,sexism2022_english-1601
+3. animosity,sexism2022_english-15386
+2. derogation,sexism2022_english-6728
+3. animosity,sexism2022_english-11379
+4. prejudiced discussions,sexism2022_english-17915
+3. animosity,sexism2022_english-4441
+2. derogation,sexism2022_english-15111
+2. derogation,sexism2022_english-11738
+3. animosity,sexism2022_english-10489
+3. animosity,sexism2022_english-12786
+2. derogation,sexism2022_english-2812
+3. animosity,sexism2022_english-19647
+2. derogation,sexism2022_english-7476
+4. prejudiced discussions,sexism2022_english-6912
+3. animosity,sexism2022_english-12120
+2. derogation,sexism2022_english-13731
+2. derogation,sexism2022_english-11989
+4. prejudiced discussions,sexism2022_english-17720
+1. threats, plans to harm and incitement,sexism2022_english-1305
+2. derogation,sexism2022_english-9426
+2. derogation,sexism2022_english-4996
+2. derogation,sexism2022_english-18918
+2. derogation,sexism2022_english-164
+2. derogation,sexism2022_english-865
+2. derogation,sexism2022_english-11349
+3. animosity,sexism2022_english-799
+2. derogation,sexism2022_english-19940
+1. threats, plans to harm and incitement,sexism2022_english-3388
+3. animosity,sexism2022_english-16967
+2. derogation,sexism2022_english-16710
+2. derogation,sexism2022_english-7652
+4. prejudiced discussions,sexism2022_english-19085
+1. threats, plans to harm and incitement,sexism2022_english-16227
+3. animosity,sexism2022_english-4741
+4. prejudiced discussions,sexism2022_english-8876
+2. derogation,sexism2022_english-18182
+2. derogation,sexism2022_english-18713
+3. animosity,sexism2022_english-3221
+2. derogation,sexism2022_english-9306
+4. prejudiced discussions,sexism2022_english-4830
+3. animosity,sexism2022_english-17489
+2. derogation,sexism2022_english-3553
+2. derogation,sexism2022_english-18702
+3. animosity,sexism2022_english-7856
+2. derogation,sexism2022_english-12624
+3. animosity,sexism2022_english-5616
+3. animosity,sexism2022_english-703
+2. derogation,sexism2022_english-611
+2. derogation,sexism2022_english-15651
+2. derogation,sexism2022_english-5093
+4. prejudiced discussions,sexism2022_english-8082
+3. animosity,sexism2022_english-11940
+4. prejudiced discussions,sexism2022_english-15769
+3. animosity,sexism2022_english-14989
+2. derogation,sexism2022_english-13962
+2. derogation,sexism2022_english-1668
+3. animosity,sexism2022_english-8356
+2. derogation,sexism2022_english-15656
+2. derogation,sexism2022_english-14263
+2. derogation,sexism2022_english-107
+2. derogation,sexism2022_english-12667
+3. animosity,sexism2022_english-171
+3. animosity,sexism2022_english-15596
+2. derogation,sexism2022_english-13328
+1. threats, plans to harm and incitement,sexism2022_english-18680
+2. derogation,sexism2022_english-10650
+4. prejudiced discussions,sexism2022_english-16671
+3. animosity,sexism2022_english-8022
+2. derogation,sexism2022_english-9733
+3. animosity,sexism2022_english-10373
+4. prejudiced discussions,sexism2022_english-11106
+3. animosity,sexism2022_english-9383
+2. derogation,sexism2022_english-8169
+3. animosity,sexism2022_english-19318
+3. animosity,sexism2022_english-5833
+1. threats, plans to harm and incitement,sexism2022_english-12916
+3. animosity,sexism2022_english-10726
+2. derogation,sexism2022_english-17197
+2. derogation,sexism2022_english-5378
+3. animosity,sexism2022_english-19417
+2. derogation,sexism2022_english-2756
+2. derogation,sexism2022_english-6951
+3. animosity,sexism2022_english-13701
+3. animosity,sexism2022_english-13016
+2. derogation,sexism2022_english-17228
+3. animosity,sexism2022_english-11410
+3. animosity,sexism2022_english-17667
+3. animosity,sexism2022_english-9697
+2. derogation,sexism2022_english-2170
+2. derogation,sexism2022_english-9760
+3. animosity,sexism2022_english-13981
+3. animosity,sexism2022_english-16641
+1. threats, plans to harm and incitement,sexism2022_english-8182
+3. animosity,sexism2022_english-5563
+1. threats, plans to harm and incitement,sexism2022_english-9783
+2. derogation,sexism2022_english-4947
+4. prejudiced discussions,sexism2022_english-7135
+4. prejudiced discussions,sexism2022_english-14927
+3. animosity,sexism2022_english-19677
+2. derogation,sexism2022_english-6590
+3. animosity,sexism2022_english-18591
+3. animosity,sexism2022_english-37
+2. derogation,sexism2022_english-3894
+4. prejudiced discussions,sexism2022_english-6562
+2. derogation,sexism2022_english-19213
+1. threats, plans to harm and incitement,sexism2022_english-7949
+3. animosity,sexism2022_english-18751
+2. derogation,sexism2022_english-1340
+2. derogation,sexism2022_english-16447
+3. animosity,sexism2022_english-15384
+2. derogation,sexism2022_english-1950
+1. threats, plans to harm and incitement,sexism2022_english-16010
+3. animosity,sexism2022_english-9320
+1. threats, plans to harm and incitement,sexism2022_english-14726
+3. animosity,sexism2022_english-273
+2. derogation,sexism2022_english-19401
+2. derogation,sexism2022_english-95
+3. animosity,sexism2022_english-1846
+2. derogation,sexism2022_english-12865
+2. derogation,sexism2022_english-6864
+3. animosity,sexism2022_english-17934
+2. derogation,sexism2022_english-4138
