@@ -50,8 +50,8 @@ def main():
                 'TOXICITY']
 
     # Files to extract data from and store data in
-    input_file = '../data/dev.csv'
-    output_file = '../data/papi_features_dev.json'
+    input_file = '../data/dev_task_c_entries.csv'
+    output_file = '../data/papi_features_dev_task_c_entries.json'
 
     # Get attribute probabilities of all training data
     papi_dict = dict()
