@@ -3,7 +3,7 @@ import argparse
 import sys
 sys.path.append("../")
 
-from utils import load_picklefile, get_preds, write_preds
+from utils import load_picklefile, get_preds, write_preds, add_features_to_sents
 from bert_utils import load_model, read_testdata_andvectorize
 
 def create_arg_parser():
@@ -34,12 +34,18 @@ def main():
     '''Main function to train and test neural network given cmd line arguments'''
     args = create_arg_parser()
     print(args)
-    base_lm, max_seq_len, task_type = load_picklefile(f"{args.best_modelname}_task_{args.task_type}.details")
+    base_lm, max_seq_len, task_type, feature_paths, threshold_values = load_picklefile(f"{args.best_modelname}_task_{args.task_type}.details")
     assert task_type==args.task_type, "Make sure correct model files are passed\n Check task type"
     encoder = load_picklefile(f"{args.best_modelname}_task_{task_type}.pickle")
     best_model, tokenizer = load_model(base_lm, num_labels= len(encoder.classes_))
     best_model.load_weights(f"{args.best_modelname}_task_{task_type}")
     test_ids, X_test, Y_test, tokens_test = read_testdata_andvectorize(args.test_file, max_seq_len, tokenizer, encoder, task_type)
+    if feature_paths["empath"]:
+        test_ids, X_test = add_features_to_sents(test_ids, X_test, f"dev_task_{task_type.lower()}_entries", feature_paths["empath"], "empath", threshold_values)
+    if feature_paths["hurtlex"]:
+        test_ids, X_test = add_features_to_sents(test_ids, X_test, f"dev_task_{task_type.lower()}_entries", feature_paths["hurtlex"], "hurtlex", threshold_values)
+    if feature_paths["papi"]:
+        test_ids, X_test = add_features_to_sents(test_ids, X_test, f"dev_task_{task_type.lower()}_entries", feature_paths["papi"], "papi", threshold_values)
     Y_pred = get_preds(model = best_model, X_test =  tokens_test, task_type=task_type,encoder= encoder)
     write_preds(test_ids, Y_pred, args.output_predfile)
 

@@ -17,6 +17,7 @@ sys.path.append("../")
 
 from utils import create_class_weights, read_data,\
                   test_set_predict, save_picklefile, numerize_labels
+from utils import append_feat_totraindev
 
 from bert_utils import vectorize_inputtext, load_model
 
@@ -52,6 +53,24 @@ def create_arg_parser():
 
     parser.add_argument("--seed", default=1234, type=int,
                         help="Seed for reproducible results")
+
+    parser.add_argument("--papi_name", type=str,
+                        help="Name of Perspective file name without train/dev/test split in names")
+
+    parser.add_argument("--hurtlex_name", type=str,
+                        help="Name of Hurtlex file name without train/dev/test split in names")
+
+    parser.add_argument("--empath_name", type=str,
+                        help="Name of Empath file name without train/dev/test split in names")
+
+    parser.add_argument("--papi_threshold", default= 0.5, type=float,
+                        help="Threshold for papi features - 0 to 1")
+
+    parser.add_argument("--hurtlex_threshold", default= 0,type=float,
+                        help="Threshold for hurtlex features - 0 to 1")
+
+    parser.add_argument("--empath_threshold", default= 0,type=float,
+                        help="Threshold for Empath features - 0 to 1")
 
     args = parser.parse_args()
     return args
@@ -137,7 +156,6 @@ def convert_traindev(max_seq_len, tokenizer, X_train, X_dev):
     tokens_dev = vectorize_inputtext(max_seq_len, tokenizer, X_dev)
     return tokens_train, tokens_dev
 
-
 def main():
     '''Main function to train and test neural network given cmd line arguments'''
     args = create_arg_parser()
@@ -150,6 +168,21 @@ def main():
 
     # Read in the data and embeddings
     train_ids, X_train, Y_train, dev_ids, X_dev, Y_dev = read_data(args.train_file, args.dev_file, args.task_type)
+
+    threshold_values = { "empath": args.empath_threshold, \
+                         "hurtlex": args.hurtlex_threshold,
+                         "papi": args.papi_threshold}
+
+    feature_paths = {    "empath": args.empath_name, \
+                         "hurtlex": args.hurtlex_name,
+                         "papi": args.papi_name}
+
+    train_ids, X_train, dev_ids, X_dev = append_feat_totraindev(args.empath_name, train_ids, X_train,
+                           dev_ids, X_dev, "empath", threshold_values)
+    train_ids, X_train, dev_ids, X_dev = append_feat_totraindev(args.hurtlex_name, train_ids, X_train,
+                           dev_ids, X_dev, "hurtlex", threshold_values)
+    train_ids, X_train, dev_ids, X_dev = append_feat_totraindev(args.papi_name, train_ids, X_train,
+                           dev_ids, X_dev, "papi", threshold_values)
 
     # Create model
     model, tokenizer = create_model(args, Y_train, learning_rate = args.learning_rate, 
@@ -168,7 +201,7 @@ def main():
     save_picklefile(encoder, f"{args.output_modelname}_task_{args.task_type}.pickle")
     print(f"Label encoder is saved to {args.output_modelname}_task_{args.task_type}.pickle")
 
-    details = [args.langmodel_name, args.max_seq_len, args.task_type]
+    details = [args.langmodel_name, args.max_seq_len, args.task_type, feature_paths, threshold_values ]
     save_picklefile(details, f"{args.output_modelname}_task_{args.task_type}.details")
     print(f"Base language model & max-seq-len are saved to {args.output_modelname}_task_{args.task_type}.details")
 
