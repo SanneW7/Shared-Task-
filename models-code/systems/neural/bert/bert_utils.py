@@ -3,7 +3,7 @@ from transformers import AutoTokenizer, TFAutoModelForSequenceClassification
 import sys
 import pandas as pd
 sys.path.append("../")
-from utils import read_corpus, filter_none_class, get_taskname
+from utils import read_corpus, filter_none_class
 
 def load_model(lm = "bert-base-uncased", num_labels=2):
     tokenizer = AutoTokenizer.from_pretrained(lm)

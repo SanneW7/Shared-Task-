@@ -48,6 +48,7 @@ def main():
         test_ids, X_test = add_features_to_sents(test_ids, X_test, f"dev_task_{task_type.lower()}_entries", feature_paths["papi"], "papi", threshold_values)
     Y_pred = get_preds(model = best_model, X_test =  tokens_test, task_type=task_type,encoder= encoder)
     write_preds(test_ids, Y_pred, args.output_predfile)
+    print("Predictions done!!")
 
 if __name__ == '__main__':
     main()
