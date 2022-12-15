@@ -218,3 +218,61 @@ def read_data(train_file, dev_file, task_type):
         dev_ids, X_dev, Y_dev = filter_none_class(dev_ids, X_dev, Y_dev)
 
     return train_ids, X_train, Y_train, dev_ids, X_dev, Y_dev
+
+
+FEATURE_NAMES = { "empath":[ "sexism", "violence", "money", "valuable" "domestic work", "hate", "aggression", "anticipation", "crime", "weakness",
+                 "horror", "swearing terms", "kill", "sexual", "cooking",
+                 "exasperation", "body", "ridicule", "disgust", "anger", "rage"],
+
+                 "papi": ["flirtation", "identity_attack", "insult", "obscene", "profanity",
+                          "severe_toxicity", "sexually_explicit", "threat", "toxicity"],
+                          
+                  "hurtlex": ["negative stereotypes and ethnic slurs",
+                            "professions and occupations",
+                            "physical disabilities and diversity",
+                            "cognitive disabilities and diversity",
+                            "female genitalia",
+                            "words related to prostitution",
+                            "words related to homosexuality",
+                            "with potential negative connotations",
+                            "derogatory words",
+                            "male genitalia"]}
+
+def load_features_file(filename):
+    with open(filename, 'r') as fh:
+        features_perid = json.load(fh)
+    return features_perid
+
+def add_features_to_sents(ids, sents, split_name,
+                          filename, feature_name,
+                          FEATURE_THRESHOLDS = { "empath": 0, "hurtlex": 0, "papi": 0.5}):
+    features_perid = load_features_file(filename.replace(".json", f"_{split_name}.json"))
+    featurenames = FEATURE_NAMES[feature_name]
+    new_sentences = []
+    for id, snt in zip(ids, sents):
+        local_features = []
+        extra_sent = []
+        snt_features = features_perid[id]
+        for ind_feat, feat_name in zip(snt_features, featurenames):
+            if ind_feat>FEATURE_THRESHOLDS[feature_name]:
+                local_features.append(feat_name)
+
+        if len(local_features)==0:
+            extra_sent = ["None"]
+        else:
+            extra_sent = extra_sent + list(set(local_features))
+        new_sentences.append(f"{snt}. {feature_name} features : {', '.join(extra_sent)}")
+
+    return ids, new_sentences
+
+def append_feat_totraindev(features_file, train_ids, X_train,
+                          dev_ids, X_dev, feature_name,
+                          threshold_values):
+    if features_file:
+        train_ids, X_train = add_features_to_sents(train_ids, X_train, "train",
+                                                   features_file, feature_name,
+                                                   threshold_values)
+        dev_ids, X_dev = add_features_to_sents(dev_ids, X_dev, "dev",
+                                                   features_file, feature_name,
+                                                   threshold_values)
+    return train_ids, X_train, dev_ids, X_dev
