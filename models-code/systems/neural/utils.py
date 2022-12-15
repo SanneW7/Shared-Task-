@@ -112,12 +112,11 @@ def write_preds(ids, Y_pred, filename):
         Y_pred (List): Labels predicted
     """
     txtt = []
-    txtt.append(",".join(["label_pred","rewire_id"]) )
     for idd, yprd in zip(ids, Y_pred):
-        txtt.append(",".join([yprd, idd]))
+        txtt.append([yprd, idd])
 
-    with open(filename, "w") as fp:
-        fp.write("\n".join(txtt))
+    txtt = pd.DataFrame(txtt, columns=["label_pred","rewire_id"] )
+    txtt.to_csv(filename, index=False)
 
 def get_preds(model, X_test, task_type, encoder):
     '''Do predictions'''
