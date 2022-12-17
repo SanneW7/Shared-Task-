@@ -16,7 +16,8 @@ import sys
 sys.path.append("../")
 
 from utils import create_class_weights, read_data,\
-                  test_set_predict, save_picklefile, numerize_labels
+                  test_set_predict, save_picklefile, numerize_labels, \
+                  get_features
 
 from bert_utils import vectorize_inputtext, load_model
 
@@ -52,6 +53,10 @@ def create_arg_parser():
 
     parser.add_argument("--seed", default=1234, type=int,
                         help="Seed for reproducible results")
+
+    parser.add_argument("--features", default="", type=str,
+                        help="String depicting features to use; p=PerspectiveAPI, e=Empath, h=HurtLex")
+
 
     args = parser.parse_args()
     return args
@@ -150,6 +155,7 @@ def main():
 
     # Read in the data and embeddings
     train_ids, X_train, Y_train, dev_ids, X_dev, Y_dev = read_data(args.train_file, args.dev_file, args.task_type)
+    train_features, dev_features = get_features(args.features, args.train_file, train_ids, args.dev_file, dev_ids)
 
     # Create model
     model, tokenizer = create_model(args, Y_train, learning_rate = args.learning_rate, 
@@ -159,11 +165,23 @@ def main():
     encoder, Y_train_bin, Y_dev_bin = numerize_labels(Y_train, Y_dev)
 
     class_weights = create_class_weights(Y_train, encoder)
+
+    # This prints a summary of the model. Here you can see the structure of the model. It consists of
+    # a BERT layer, a dropout layer and a classifier layer. I think that if you can extract the layer
+    # (see lines below), we might be able to append the features.
+    print(model.summary())
+
+    # As Tommaso recommended, we can try to append the features to the CLS layer. Here, it is extracted.
+    # Getting the output is tricky, since cls_layer.output does not yield a result.
+    cls_layer = model.get_layer('classifier')
+
     # Train the model
     model = train_model(model, tokens_train, Y_train_bin, tokens_dev,
                         Y_dev_bin, encoder= encoder ,batchsize = args.batch_size,
                         num_epochs = args.num_epochs, class_weights = class_weights,
                         best_modelname = args.output_modelname, task_type= args.task_type)
+
+    print(model.get_layer('classifier').output)
 
     save_picklefile(encoder, f"{args.output_modelname}_task_{args.task_type}.pickle")
     print(f"Label encoder is saved to {args.output_modelname}_task_{args.task_type}.pickle")

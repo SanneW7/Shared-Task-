@@ -1,4 +1,6 @@
-from transformers import AutoTokenizer, TFAutoModelForSequenceClassification
+from transformers import AutoTokenizer, TFAutoModelForSequenceClassification, TFAutoModel
+from keras import Sequential
+from keras.layers import Dense
 
 import sys
 import pandas as pd
@@ -9,11 +11,19 @@ def load_model(lm = "bert-base-uncased", num_labels=2):
     tokenizer = AutoTokenizer.from_pretrained(lm)
     tokenizer.add_tokens("[NUM]")
     try:
-        model = TFAutoModelForSequenceClassification.from_pretrained(lm, num_labels= num_labels)
+        auto_model = TFAutoModelForSequenceClassification.from_pretrained(lm)
     except:
-        model = TFAutoModelForSequenceClassification.from_pretrained(lm, from_pt=True, num_labels= num_labels)
-    model.resize_token_embeddings(len(tokenizer))
-    return model, tokenizer
+        auto_model = TFAutoModelForSequenceClassification.from_pretrained(lm, from_pt=True)
+    auto_model.resize_token_embeddings(len(tokenizer))
+    # This is the same as before, with no added layers. By using model.summary() in train.py (see train,py),
+    # you can see the structure of the loaded model, including a classifier layer.
+
+    # This is what we discussed in the cafetaria, when we got the error of the input size. We asked Tommaso and
+    # He recommended extracting the CLS layer. This is not that. You might want to change the variable names.
+    # model = Sequential()
+    # model.add(auto_model)
+    # model.add(Dense(num_labels))
+    return auto_model, tokenizer
 
 def vectorize_inputtext(max_seq_len, tokenizer, listoftexts):
     # Transform words to indices using a vectorizer

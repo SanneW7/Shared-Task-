@@ -218,3 +218,39 @@ def read_data(train_file, dev_file, task_type):
         dev_ids, X_dev, Y_dev = filter_none_class(dev_ids, X_dev, Y_dev)
 
     return train_ids, X_train, Y_train, dev_ids, X_dev, Y_dev
+
+
+def get_feature_file(prefix, filename):
+    """Get the feature-related filename"""
+    filename = '{0}.json'.format(filename[:-4]).split('/')
+    filename[-1] = prefix + filename[-1]
+    filename = '/'.join(filename)
+    return filename
+
+
+def extract_features(prefix, filename, ids):
+    """Extract prepocessed features from json file"""
+    filename = get_feature_file(prefix, filename)
+    id_features_dict = read_json(filename)
+    features = np.array([id_features_dict[id] for id in ids])
+    return features
+
+
+def get_features(features, train_file, train_ids, dev_file, dev_ids):
+    """Create feature vectors"""
+    train_features, dev_features = [], []
+    prefix_dict = {'e': 'empath',
+                   'h': 'hurtlex',
+                   'p': 'papi'}
+    for feature in features:
+        prefix = '{0}_features_'.format(prefix_dict[feature])
+        train_features_extract = extract_features(prefix, train_file, train_ids)
+        dev_features_extract = extract_features(prefix, dev_file, dev_ids)
+
+        if len(train_features) and len(dev_features):
+            train_features = np.hstack((train_features, train_features_extract))
+            dev_features = np.hstack((dev_features, dev_features_extract))
+        else:
+            train_features = train_features_extract
+            dev_features = dev_features_extract
+    return train_features, dev_features
