@@ -184,7 +184,6 @@ def main():
     train_ids, X_train, dev_ids, X_dev = append_feat_totraindev(args.papi_name, train_ids, X_train,
                            dev_ids, X_dev, "papi", threshold_values)
 
-    X_train, X_dev, Y_train, Y_dev = X_train[:100], X_dev[:100], Y_train[:100], Y_dev[:100]
     # Create model
     model, tokenizer = create_model(args, Y_train, learning_rate = args.learning_rate, 
                                     lm = args.langmodel_name, batchsize = args.batch_size,
