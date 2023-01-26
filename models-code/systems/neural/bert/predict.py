@@ -21,6 +21,9 @@ def create_arg_parser():
     parser.add_argument("--batch_size", default=16, type=int,
                         help="Batch size for training")
 
+    parser.add_argument("--mode", default="test", type=str,
+                        help="dev/test for development and test set respectively")
+
     parser.add_argument("--show_cm", default=True, type=bool,
                         help="Show confusion matrix")
    
@@ -41,11 +44,11 @@ def main():
     best_model.load_weights(f"{args.best_modelname}_task_{task_type}")
     test_ids, X_test, Y_test, tokens_test = read_testdata_andvectorize(args.test_file, max_seq_len, tokenizer, encoder, task_type)
     if feature_paths["empath"]:
-        test_ids, X_test = add_features_to_sents(test_ids, X_test, f"dev_task_{task_type.lower()}_entries", feature_paths["empath"], "empath", threshold_values)
+        test_ids, X_test = add_features_to_sents(test_ids, X_test, f"{args.mode}_task_{task_type.lower()}_entries", feature_paths["empath"], "empath", threshold_values)
     if feature_paths["hurtlex"]:
-        test_ids, X_test = add_features_to_sents(test_ids, X_test, f"dev_task_{task_type.lower()}_entries", feature_paths["hurtlex"], "hurtlex", threshold_values)
+        test_ids, X_test = add_features_to_sents(test_ids, X_test, f"{args.mode}_task_{task_type.lower()}_entries", feature_paths["hurtlex"], "hurtlex", threshold_values)
     if feature_paths["papi"]:
-        test_ids, X_test = add_features_to_sents(test_ids, X_test, f"dev_task_{task_type.lower()}_entries", feature_paths["papi"], "papi", threshold_values)
+        test_ids, X_test = add_features_to_sents(test_ids, X_test, f"{args.mode}_task_{task_type.lower()}_entries", feature_paths["papi"], "papi", threshold_values)
     Y_pred = get_preds(model = best_model, X_test =  tokens_test, task_type=task_type,encoder= encoder)
     write_preds(test_ids, Y_pred, args.output_predfile)
     print("Predictions done!!")
