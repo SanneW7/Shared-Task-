@@ -35,7 +35,7 @@ def extract_probs(response):
 
 def main():
     # Create PerspectiveAPI client
-    api_key = 'AIzaSyBxjpGxPUtN30WrjCYCC6pOPDZ4fhZpPRo'
+    api_key = '[GOOGLE API KEY HERE]'
     client = create_papi_client(api_key)
 
     # List of used attributes
